@@ -14,22 +14,19 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          repository: 'SPT-AKI/Server'
-          lfs: true
-          submodules: true
-          github-server-url: 'https://dev.sp-tarkov.com'
+        run: |
+          git clone https://dev.sp-tarkov.com/SPT-AKI/Server.git ./
+          git lfs fetch
+          git lfs pull
+
+      - run: cd ./project
+      - name: check files
+        run: ls ./
           
       - name: Setup Node.js environment
         uses: actions/setup-node@v3.8.1
         with:
           node-version: 16
-
-      - run: cd ./project
-
-      - name: check files
-        run: ls ./
       
       - run: npm ci
       - run: npm run build:debug
