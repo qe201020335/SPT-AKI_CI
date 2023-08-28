@@ -14,29 +14,23 @@ jobs:
 
     steps:
       - name: Checkout
-        run: |
-          git clone https://dev.sp-tarkov.com/SPT-AKI/Server.git ./
-          git lfs fetch
-          git lfs pull
-
-      - name: check files
-        run: ls ./project
+        uses: actions/checkout@v3
           
       - name: Setup Node.js environment
         uses: actions/setup-node@v3.8.1
         with:
           node-version: 16
+
       - name: build it
-        run: |
-          cd ./project
-          npm install
-          npm run build:debug
+        id: build
+        shell: pwsh
+        run: ./build_server.ps1
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.2
         with:
-          name: SPT-Aki
-          path: './project/build'
+          name: ${{ steps.build.outputs.ZIP_NAME }}
+          path: './project/${{ steps.build.outputs.ZIP_NAME }}'
           if-no-files-found: error
           retention-days: 3
 
