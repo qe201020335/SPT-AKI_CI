@@ -2,30 +2,28 @@ name: CI
 
 on:
   push:
-    branches: [ "master" ]
   pull_request:
-    branches: [ "master" ]
   schedule:
     - cron:  '0 0 * * *'
   workflow_dispatch:
-  
+
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v3.8.1
-        with:
-          node-version: 16
-          
       - name: Checkout
-      - uses: actions/checkout@v3
+        uses: actions/checkout@v3
         with:
           repository: 'https://dev.sp-tarkov.com/SPT-AKI/Server.git'
           lfs: true
           submodules: true
+          
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3.8.1
+        with:
+          node-version: 16
 
       - run: cd ./project
 
