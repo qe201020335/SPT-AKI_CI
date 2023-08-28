@@ -26,6 +26,10 @@ jobs:
         shell: pwsh
         run: ./build_server.ps1
 
+      - run: echo "$FILE_NAME"
+        env:
+          FILE_NAME: ${{ steps.build.outputs.ZIP_NAME }}
+
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.2
         with:
