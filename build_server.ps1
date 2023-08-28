@@ -6,7 +6,9 @@ Param(
     [string] $Branch
 )
 
+$ErrorActionPreference = "Stop"
 $SERVER_DIR = "./Server"
+
 if (Test-Path -Path $SERVER_DIR) {
     if ($Overwrite -or (Read-Host "$SERVER_DIR exists, delete? [y/n]") -eq 'y') {
         Write-Output "$SERVER_DIR exists, removing"
@@ -29,13 +31,6 @@ else
     Write-Output "Branch not given, using default branch"
     git clone https://dev.sp-tarkov.com/SPT-AKI/Server.git $SERVER_DIR
 }
-
-if($? -eq $false)
-{
-    Write-Output "Clone Failed."
-    Exit 1
-}
-
 
 Set-Location $SERVER_DIR
 
