@@ -1,4 +1,4 @@
-name: CI
+name: Build Server
 
 on:
   push:
@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: 16
 
-      - name: build it
+      - name: Run build script
         id: build
         shell: pwsh
         run: ./build_server.ps1
