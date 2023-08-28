@@ -19,17 +19,18 @@ jobs:
           git lfs fetch
           git lfs pull
 
-      - run: cd ./project
       - name: check files
-        run: ls ./
+        run: ls ./project
           
       - name: Setup Node.js environment
         uses: actions/setup-node@v3.8.1
         with:
           node-version: 16
-      
-      - run: npm ci
-      - run: npm run build:debug
+      - name: build it
+      - run: |
+          cd ./project
+          npm ci
+          npm run build:debug
 
       - name: Upload a Build Artifact
         uses: actions/upload-artifact@v3.1.2
