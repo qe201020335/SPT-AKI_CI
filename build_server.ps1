@@ -18,3 +18,4 @@ ls ./build
 Compress-Archive -Path ./build/* -DestinationPath "../SPT-Aki-Server-$Head.zip"
 echo "Built file: SPT-Aki-Server-$Head.zip"
 echo "ZIP_NAME=SPT-Aki-Server-$Head.zip" >> "$GITHUB_OUTPUT"
+cat "$GITHUB_OUTPUT"
