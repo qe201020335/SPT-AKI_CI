@@ -34,7 +34,7 @@ jobs:
         uses: actions/upload-artifact@v3.1.2
         with:
           name: ${{ steps.build.outputs.ZIP_NAME }}
-          path: './project/${{ steps.build.outputs.ZIP_NAME }}'
+          path: './Server/${{ steps.build.outputs.ZIP_NAME }}'
           if-no-files-found: error
           retention-days: 3
 
