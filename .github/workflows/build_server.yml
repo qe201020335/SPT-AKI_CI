@@ -16,9 +16,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
         with:
-          repository: 'https://dev.sp-tarkov.com/SPT-AKI/Server.git'
+          repository: 'SPT-AKI/Server'
           lfs: true
           submodules: true
+          github-server-url: 'https://dev.sp-tarkov.com'
           
       - name: Setup Node.js environment
         uses: actions/setup-node@v3.8.1
