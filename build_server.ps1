@@ -45,39 +45,44 @@ Write-Output "build"
 Set-Location ./project
 npm install
 
+Write-Output "Workaround for hardcoded windows path delimiter"
+$GULPFILE = "./gulpfile.mjs"
+Set-Content -path $GULPFILE ((Get-Content -path $GULPFILE -Raw) -replace "\\\\checks.dat",'/checks.dat')
 
-Write-Output ("building the server with timeout {0} sec" -f $GULP_TIMEOUT)
-# the gulp task may never return because a file watcher is not being triggered
-$code = {
-    npm run build:debug *>&1
+npm run build:debug *>&1
 
-    if ($LASTEXITCODE -ne 0) {
-        throw ("Build failed. Exit code {0}" -f $LASTEXITCODE)
-    }
-}
-$j = Start-Job -ScriptBlock $code
-Wait-Job $j -Timeout $GULP_TIMEOUT
-Write-Output "Job Output: "
-Receive-Job $j
-Write-Output "Forcefully removing the job"
-Remove-Job -force $j
-Write-Output ("Job state: {0}" -f $j.State)
+# Write-Output ("building the server with timeout {0} sec" -f $GULP_TIMEOUT)
+# # the gulp task may never return because a file watcher is not being triggered
+# $code = {
+#     npm run build:debug *>&1
 
-if ($j.State -ne "Completed") {
-    # it did not return, we need to manually re-do the unfinished file watch job
-    Write-Output "Gulp was stuck!"
-    if (!(Test-Path -Path "./build/Aki_Data/Server/configs/core.json")) {
-        Write-Output "Something went wrong, the core json doesn't exist"
-        Exit 1
-    }
-    $CoreJson = (Get-Content ./build/Aki_Data/Server/configs/core.json |  ConvertFrom-Json -AsHashtable)
-    if (!$CoreJson.ContainsKey("commit")) {
-        $CoreJson.commit = git rev-parse HEAD
-    }
-} 
-else {
-    Write-Output "Gulp exited!"
-}
+#     if ($LASTEXITCODE -ne 0) {
+#         throw ("Build failed. Exit code {0}" -f $LASTEXITCODE)
+#     }
+# }
+# $j = Start-Job -ScriptBlock $code
+# Wait-Job $j -Timeout $GULP_TIMEOUT
+# Write-Output "Job Output: "
+# Receive-Job $j
+# Write-Output "Forcefully removing the job"
+# Remove-Job -force $j
+# Write-Output ("Job state: {0}" -f $j.State)
+
+# if ($j.State -ne "Completed") {
+#     # it did not return, we need to manually re-do the unfinished file watch job
+#     Write-Output "Gulp was stuck!"
+#     if (!(Test-Path -Path "./build/Aki_Data/Server/configs/core.json")) {
+#         Write-Output "Something went wrong, the core json doesn't exist"
+#         Exit 1
+#     }
+#     $CoreJson = (Get-Content ./build/Aki_Data/Server/configs/core.json |  ConvertFrom-Json -AsHashtable)
+#     if (!$CoreJson.ContainsKey("commit")) {
+#         $CoreJson.commit = git rev-parse HEAD
+#     }
+# } 
+# else {
+#     Write-Output "Gulp exited!"
+# }
 
 
 if ($IsLinux -eq $true) {
