@@ -11,7 +11,7 @@ Param(
 )
 
 $ErrorActionPreference = "Stop"
-$SOURCE_REPO = "https://dev.sp-tarkov.com/SPT-AKI/Modules.git"
+$SOURCE_REPO = "https://dev.sp-tarkov.com/SPT-AKI/Server.git"
 $SERVER_DIR = "./Server"
 $GULP_TIMEOUT = 60 # 60 sec is planty for compiling the server
 
