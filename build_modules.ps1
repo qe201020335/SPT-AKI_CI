@@ -5,6 +5,9 @@ Param(
     [Parameter(Mandatory=$false)]
     [string] $Branch,
 
+    [Parameter(Mandatory = $false)]
+    [string] $Commit,
+
     [Parameter(Mandatory=$true)]
     [string] $Url,
 
@@ -40,6 +43,13 @@ else
 }
 
 Set-Location $SOURCE_DIR
+
+
+if ($Commit.Length -gt 0) {
+    Write-Output "Checking out the commit $Commit"
+    git fetch --all
+    git checkout $Commit
+}
 
 $Head = git rev-parse --short HEAD
 $Branch = git rev-parse --abbrev-ref HEAD

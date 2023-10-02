@@ -3,10 +3,15 @@ Param(
     [Switch] $Overwrite,
 
     [Parameter(Mandatory = $false)]
-    [string] $Branch
+    [string] $Branch,
+
+    [Parameter(Mandatory = $false)]
+    [string] $Commit
+
 )
 
 $ErrorActionPreference = "Stop"
+$SOURCE_REPO = "https://dev.sp-tarkov.com/SPT-AKI/Modules.git"
 $SERVER_DIR = "./Server"
 $GULP_TIMEOUT = 60 # 60 sec is planty for compiling the server
 
@@ -23,14 +28,20 @@ if (Test-Path -Path $SERVER_DIR) {
 Write-Output "clone repo"
 if ( $Branch.Length -gt 0 ) {
     Write-Output "Cloning branch $Branch"
-    git clone -b $Branch https://dev.sp-tarkov.com/SPT-AKI/Server.git $SERVER_DIR
+    git clone -b $Branch $SOURCE_REPO $SERVER_DIR
 } 
 else {
     Write-Output "Branch not given, using default branch"
-    git clone https://dev.sp-tarkov.com/SPT-AKI/Server.git $SERVER_DIR
+    git clone $SOURCE_REPO $SERVER_DIR
 }
 
 Set-Location $SERVER_DIR
+
+if ($Commit.Length -gt 0) {
+    Write-Output "Checking out the commit $Commit"
+    git fetch --all
+    git checkout $Commit
+}
 
 $Head = git rev-parse --short HEAD
 $Branch = git rev-parse --abbrev-ref HEAD
