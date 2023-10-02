@@ -56,6 +56,7 @@ Set-Location ./project
 dotnet restore
 dotnet tool restore
 dotnet cake
+dotnet cake  # run it twice
 
 Get-ChildItem ./build
 
