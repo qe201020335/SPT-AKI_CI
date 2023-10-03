@@ -41,6 +41,10 @@ if ($Commit.Length -gt 0) {
     Write-Output "Checking out the commit $Commit"
     git fetch --all
     git checkout $Commit
+
+    if ($LASTEXITCODE -ne 0) {
+        throw ("Commit $Commit checkout failed. It doesn't exist? git exit code $LASTEXITCODE")
+    }
 }
 
 $Head = git rev-parse --short HEAD
@@ -52,14 +56,22 @@ Write-Output "lfs"
 git lfs fetch
 git lfs pull
 
-Write-Output "build"
 Set-Location ./project
-npm install
 
-Write-Output "Workaround for hardcoded windows path delimiter"
+
 $GULPFILE = "./gulpfile.mjs"
-Set-Content -path $GULPFILE ((Get-Content -path $GULPFILE -Raw) -replace "\\\\checks.dat",'/checks.dat')
+if ($null -ne (Select-String -Path $GULPFILE -Pattern "\\\\checks.dat"))
+{
+    Write-Warning "Applying workaround for hardcoded windows path delimiter"
+    Set-Content -path $GULPFILE ((Get-Content -path $GULPFILE -Raw) -replace "\\\\checks.dat",'/checks.dat')
+} 
+else {
+    Write-Output "Workaround not applied."
+}
 
+
+Write-Output "build"
+npm install
 npm run build:debug *>&1
 
 # Write-Output ("building the server with timeout {0} sec" -f $GULP_TIMEOUT)

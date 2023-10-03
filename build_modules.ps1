@@ -49,6 +49,10 @@ if ($Commit.Length -gt 0) {
     Write-Output "Checking out the commit $Commit"
     git fetch --all
     git checkout $Commit
+
+    if ($LASTEXITCODE -ne 0) {
+        throw ("Commit $Commit checkout failed. It doesn't exist? git exit code $LASTEXITCODE")
+    }
 }
 
 $Head = git rev-parse --short HEAD
