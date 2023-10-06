@@ -15,6 +15,12 @@ jobs:
       matrix:
         os: ["ubuntu-latest", "windows-latest"]
         branch: ['master', '0.13.5.0']
+        node: [16, 18]
+        exclude:
+          - branch: 'master'
+            node: 18
+          - branch: '0.13.5.0'
+            node: 16
     
     runs-on: ${{ matrix.os }}
     
@@ -25,7 +31,7 @@ jobs:
       - name: Setup Node.js environment
         uses: actions/setup-node@v3.8.1
         with:
-          node-version: 16
+          node-version: ${{matrix.node}}
 
       - name: Run build script
         id: build
