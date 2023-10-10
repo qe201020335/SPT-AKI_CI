@@ -85,7 +85,7 @@ Write-Output "Current OS: " $Os
 Get-ChildItem ./build
 $AkiMeta = (Get-Content ./build/Aki_Data/Server/configs/core.json |  ConvertFrom-Json -AsHashtable)
 Write-Output $akiMeta
-$ZipName = "Aki-Server-{0}-debug-{1}-{2}-Tarkov{3}.zip" -f $Os, $akimeta.akiVersion, $Head, $akimeta.compatibleTarkovVersion
+$ZipName = "Aki-Server-{0}-debug-{1}-{2}-{3}-Tarkov{4}.zip" -f $Os, $akimeta.akiVersion, $Branch, $Head, $akimeta.compatibleTarkovVersion
 
 Compress-Archive -Path ./build/* -DestinationPath "../$ZipName" -Force
 Write-Output "Built file: $ZipName"
