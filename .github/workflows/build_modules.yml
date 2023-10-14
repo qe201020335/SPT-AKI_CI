@@ -2,6 +2,9 @@ name: Build Modules
 
 on:
   push:
+    paths:
+      - '**.ps1'
+      - '**.yml'
   pull_request:
   schedule:
     - cron:  '0 0 * * *'
