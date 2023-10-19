@@ -24,6 +24,11 @@ Build the `0.13.5.0` branch
 ```bash
 pwsh ./build_server.ps1 -Branch 0.13.5.0
 ```
+Build an exact commit
+```bash
+pwsh ./build_server.ps1 -Commit fbb1d7eb2f6b7847fc1d6bfb2f36dd794f3b1301
+```
+
 ### Tags and Commit Hashes
 You can also find the tags on SPT-Aki's server source webpage. [Tags](https://dev.sp-tarkov.com/SPT-AKI/Server/tags)
 Values here are for easy reference and copy paste.
