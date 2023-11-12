@@ -16,7 +16,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        versions: [ {branch: 'master', version: '0.13.5.3.26535'}]
+        versions: [ {branch: 'master', version: '0.13.5.3.26535'}, {branch: '3.8.0', version: '0.13.9.1.27050'}]
     
     runs-on: windows-latest
 
