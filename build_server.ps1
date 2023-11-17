@@ -74,19 +74,22 @@ npm install
 npm run build:debug *>&1
 
 
-if ($IsLinux -eq $true) {
-    $Os = "linux"
-}
-else {
-    $Os = "win"
-}
-Write-Output "Current OS: " $Os
-
 Get-ChildItem ./build
 $AkiMeta = (Get-Content ./build/Aki_Data/Server/configs/core.json |  ConvertFrom-Json -AsHashtable)
 Write-Output $akiMeta
-$ZipName = "Aki-Server-{0}-debug-{1}-{2}-{3}-Tarkov{4}.zip" -f $Os, $akimeta.akiVersion, $Branch, $Head, $akimeta.compatibleTarkovVersion
 
-Compress-Archive -Path ./build/* -DestinationPath "../$ZipName" -Force
+$Suffix = "debug-$($akimeta.akiVersion)-$Branch-$Head-Tarkov$($akimeta.compatibleTarkovVersion)"
+
+if ($IsWindows -eq $true) {
+    $ZipName = "Aki-Server-win-$Suffix.zip"
+    Compress-Archive -Path ./build/* -DestinationPath "../$ZipName" -Force
+}
+else {
+    $ZipName = "Aki-Server-linux-$Suffix.tar.gz"
+    Set-Location ./build
+    tar --overwrite -czv -f "../../$ZipName" ./*
+}
+
+
 Write-Output "Built file: $ZipName"
 Write-Output "ZIP_NAME=$ZipName" >> "$env:GITHUB_OUTPUT"
