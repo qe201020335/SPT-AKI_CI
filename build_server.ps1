@@ -3,11 +3,13 @@ Param(
     [Switch] $Overwrite,
 
     [Parameter(Mandatory = $false)]
+    [Switch] $Release,
+
+    [Parameter(Mandatory = $false)]
     [string] $Branch,
 
     [Parameter(Mandatory = $false)]
     [string] $Commit
-
 )
 
 $ErrorActionPreference = "Stop"
@@ -26,11 +28,11 @@ if (Test-Path -Path $SERVER_DIR) {
 
 Write-Output "clone repo"
 if ( $Branch.Length -gt 0 ) {
-    Write-Output "Cloning branch $Branch"
+    Write-Output "Cloning branch/tag $Branch"
     git clone --depth 1 -b $Branch $SOURCE_REPO $SERVER_DIR
 } 
 else {
-    Write-Output "Branch not given, using default branch"
+    Write-Output "Cloning default branch"
     git clone --depth 1 $SOURCE_REPO $SERVER_DIR
 }
 
@@ -53,28 +55,43 @@ $CTimeS = (([System.DateTimeOffset]::FromUnixTimeSeconds($CTime)).DateTime).ToSt
 
 Write-Output "Current HEAD is at $Head in $Branch committed at $CTimeS"
 
+$Tag = git describe --tags --abbrev=0 $Head
+$IsTag = $LASTEXITCODE -eq 0
+if ($IsTag) {
+    Write-Output "We also have a tag $Tag at HEAD"
+}
+
 Write-Output "lfs"
 git lfs fetch
 git lfs pull
 
 Write-Output "build"
+if ($Release) {
+    $Target = "release"
+}
+else {
+    $Target = "debug"
+}
 Set-Location ./project
 npm install
-npm run build:debug *>&1
+npm run build:$Target *>&1
 
 
 Get-ChildItem ./build
 $AkiMeta = (Get-Content ./build/Aki_Data/Server/configs/core.json |  ConvertFrom-Json -AsHashtable)
 Write-Output $akiMeta
 
-if ($Branch.Equals("HEAD")) {
+if ($IsTag) {
+    $CInfo = "tag-$Tag"
+}
+elseif ($Branch.Equals("HEAD")) {
     $CInfo = "$Head-$CTimeS"
 } 
 else {
     $CInfo = "$Branch-$Head-$CTimeS"
 }
 
-$Suffix = "debug-v$($akimeta.akiVersion)-$CInfo-Tarkov$($akimeta.compatibleTarkovVersion)"
+$Suffix = "$Target-v$($akimeta.akiVersion)-$CInfo-Tarkov$($akimeta.compatibleTarkovVersion)"
 
 if ($IsWindows -eq $true) {
     $ZipName = "Aki-Server-win-$Suffix.zip"
