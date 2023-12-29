@@ -34,12 +34,12 @@ Write-Output "clone repo"
 if ( $Branch.Length -gt 0 )
 {
     Write-Output "Cloning branch $Branch"
-    git clone -b $Branch $SOURCE_REPO $SOURCE_DIR
+    git clone --depth 1 -b $Branch $SOURCE_REPO $SOURCE_DIR
 } 
 else
 {
     Write-Output "Branch not given, using default branch"
-    git clone $SOURCE_REPO $SOURCE_DIR
+    git clone --depth 1 $SOURCE_REPO $SOURCE_DIR
 }
 
 Set-Location $SOURCE_DIR
@@ -47,7 +47,7 @@ Set-Location $SOURCE_DIR
 
 if ($Commit.Length -gt 0) {
     Write-Output "Checking out the commit $Commit"
-    git fetch --all
+    git fetch --depth=1 $SOURCE_REPO $Commit
     git checkout $Commit
 
     if ($LASTEXITCODE -ne 0) {
@@ -57,8 +57,10 @@ if ($Commit.Length -gt 0) {
 
 $Head = git rev-parse --short HEAD
 $Branch = git rev-parse --abbrev-ref HEAD
+$CTime = git log -1 --format="%at"
+$CTimeS = (([System.DateTimeOffset]::FromUnixTimeSeconds($CTime)).DateTime).ToString("yyyyMMddHHmmss")
 
-Write-Output "Current HEAD is at $Head in $Branch"
+Write-Output "Current HEAD is at $Head in $Branch committed at $CTimeS"
 
 Write-Output "Download tarkov dlls"
 Invoke-WebRequest -Uri "$Url$TarkovVersion.zip" -OutFile "./dlls.zip"
@@ -74,8 +76,15 @@ dotnet cake  # run it twice
 
 Get-ChildItem ./build
 
-$ZipName = "Aki-Modules-{0}-{1}-Tarkov{2}.zip" -f $Branch, $Head, $TarkovVersion
+if ($Branch.Equals("HEAD")) {
+    $CInfo = "$Head-$CTimeS"
+} 
+else {
+    $CInfo = "$Branch-$Head-$CTimeS"
+}
 
-Compress-Archive -Path ./build/* -DestinationPath "../$ZipName"
+$ZipName = "Aki-Modules-$CInfo-Tarkov$TarkovVersion.zip"
+
+Compress-Archive -Path ./build/* -DestinationPath "../$ZipName" -Force
 Write-Output "Built file: $ZipName"
 Write-Output "ZIP_NAME=$ZipName" >> "$env:GITHUB_OUTPUT"

@@ -27,18 +27,18 @@ if (Test-Path -Path $SERVER_DIR) {
 Write-Output "clone repo"
 if ( $Branch.Length -gt 0 ) {
     Write-Output "Cloning branch $Branch"
-    git clone -b $Branch $SOURCE_REPO $SERVER_DIR
+    git clone --depth 1 -b $Branch $SOURCE_REPO $SERVER_DIR
 } 
 else {
     Write-Output "Branch not given, using default branch"
-    git clone $SOURCE_REPO $SERVER_DIR
+    git clone --depth 1 $SOURCE_REPO $SERVER_DIR
 }
 
 Set-Location $SERVER_DIR
 
 if ($Commit.Length -gt 0) {
     Write-Output "Checking out the commit $Commit"
-    git fetch --all
+    git fetch --depth=1 $SOURCE_REPO $Commit
     git checkout $Commit
 
     if ($LASTEXITCODE -ne 0) {
@@ -48,28 +48,17 @@ if ($Commit.Length -gt 0) {
 
 $Head = git rev-parse --short HEAD
 $Branch = git rev-parse --abbrev-ref HEAD
+$CTime = git log -1 --format="%at"
+$CTimeS = (([System.DateTimeOffset]::FromUnixTimeSeconds($CTime)).DateTime).ToString("yyyyMMddHHmmss")
 
-Write-Output "Current HEAD is at $Head in $Branch"
+Write-Output "Current HEAD is at $Head in $Branch committed at $CTimeS"
 
 Write-Output "lfs"
 git lfs fetch
 git lfs pull
 
-Set-Location ./project
-
-
-$GULPFILE = "./gulpfile.mjs"
-if ($null -ne (Select-String -Path $GULPFILE -Pattern "\\\\checks.dat"))
-{
-    Write-Warning "Applying workaround for hardcoded windows path delimiter"
-    Set-Content -path $GULPFILE ((Get-Content -path $GULPFILE -Raw) -replace "\\\\checks.dat",'/checks.dat')
-} 
-else {
-    Write-Output "Workaround not applied."
-}
-
-
 Write-Output "build"
+Set-Location ./project
 npm install
 npm run build:debug *>&1
 
@@ -78,7 +67,14 @@ Get-ChildItem ./build
 $AkiMeta = (Get-Content ./build/Aki_Data/Server/configs/core.json |  ConvertFrom-Json -AsHashtable)
 Write-Output $akiMeta
 
-$Suffix = "debug-$($akimeta.akiVersion)-$Branch-$Head-Tarkov$($akimeta.compatibleTarkovVersion)"
+if ($Branch.Equals("HEAD")) {
+    $CInfo = "$Head-$CTimeS"
+} 
+else {
+    $CInfo = "$Branch-$Head-$CTimeS"
+}
+
+$Suffix = "debug-v$($akimeta.akiVersion)-$CInfo-Tarkov$($akimeta.compatibleTarkovVersion)"
 
 if ($IsWindows -eq $true) {
     $ZipName = "Aki-Server-win-$Suffix.zip"
