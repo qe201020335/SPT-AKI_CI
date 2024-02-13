@@ -9,7 +9,10 @@ Param(
     [string] $Branch,
 
     [Parameter(Mandatory = $false)]
-    [string] $Commit
+    [string] $Commit,
+
+    [Parameter(Mandatory = $false)]
+    [Switch] $NoZip
 )
 
 $ErrorActionPreference = "Stop"
@@ -76,9 +79,16 @@ Set-Location ./project
 npm install
 npm run build:$Target *>&1
 
+if ($LASTEXITCODE -ne 0) {
+    throw ("npm run build:$Target failed, exit code $LASTEXITCODE")
+}
+
+if ($NoZip) {
+    Exit 0
+}
 
 Get-ChildItem ./build
-$AkiMeta = (Get-Content ./build/Aki_Data/Server/configs/core.json |  ConvertFrom-Json -AsHashtable)
+$AkiMeta = (Get-Content ./build/Aki_Data/Server/configs/core.json | ConvertFrom-Json -AsHashtable)
 Write-Output $akiMeta
 
 if ($IsTag) {

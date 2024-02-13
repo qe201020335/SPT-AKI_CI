@@ -3,24 +3,12 @@ Param(
     [Switch] $Overwrite,
 
     [Parameter(Mandatory=$false)]
-    [string] $Branch,
-
-    [Parameter(Mandatory = $false)]
-    [string] $Commit,
-
-    [Parameter(Mandatory=$true)]
-    [string] $Url,
-
-    [Parameter(Mandatory=$true)]
-    [string] $TarkovVersion,
-
-    [Parameter(Mandatory = $false)]
-    [Switch] $NoZip
+    [string] $Branch
 )
 
 $ErrorActionPreference = "Stop"
-$SOURCE_DIR = "./Modules"
-$SOURCE_REPO = "https://dev.sp-tarkov.com/SPT-AKI/Modules.git"
+$SOURCE_DIR = "./Launcher"
+$SOURCE_REPO = "https://dev.sp-tarkov.com/SPT-AKI/Launcher.git"
 
 if (Test-Path -Path $SOURCE_DIR) {
     if ($Overwrite -or (Read-Host "$SOURCE_DIR exists, delete? [y/n]") -eq 'y') {
@@ -47,7 +35,6 @@ else
 
 Set-Location $SOURCE_DIR
 
-
 if ($Commit.Length -gt 0) {
     Write-Output "Checking out the commit $Commit"
     git fetch --depth=1 $SOURCE_REPO $Commit
@@ -65,37 +52,14 @@ $CTimeS = (([System.DateTimeOffset]::FromUnixTimeSeconds($CTime)).DateTime).ToSt
 
 Write-Output "Current HEAD is at $Head in $Branch committed at $CTimeS"
 
-Write-Output "Download tarkov dlls"
-Invoke-WebRequest -Uri "$Url$TarkovVersion.zip" -OutFile "./dlls.zip"
-Expand-Archive -Path "./dlls.zip" -DestinationPath "./project/Shared/Managed"
-Get-ChildItem "./project/Shared/Managed"
-
 Write-Output "build"
 Set-Location ./project
 dotnet restore
 dotnet tool restore
 dotnet cake
-dotnet cake  # run it twice
 
 if ($LASTEXITCODE -ne 0) {
     throw ("cake build failed, exit code $LASTEXITCODE")
 }
 
-if ($NoZip) {
-    Exit 0
-}
-
-Get-ChildItem ./build
-
-if ($Branch.Equals("HEAD")) {
-    $CInfo = "$Head-$CTimeS"
-} 
-else {
-    $CInfo = "$Branch-$Head-$CTimeS"
-}
-
-$ZipName = "Aki-Modules-$CInfo-Tarkov$TarkovVersion.zip"
-
-Compress-Archive -Path ./build/* -DestinationPath "../$ZipName" -Force
-Write-Output "Built file: $ZipName"
-Write-Output "ZIP_NAME=$ZipName" >> "$env:GITHUB_OUTPUT"
+Get-ChildItem ./Build

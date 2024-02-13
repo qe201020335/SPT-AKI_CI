@@ -1,2 +1,6 @@
 Server/
 Modules/
+Launcher/
+output/
+PackagerFiles/
+*.zip
