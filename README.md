@@ -1,7 +1,12 @@
 # SPT-AKI_CI
-Build scripts for building SPT-Aki Server and client modules.
+Scripts for building SPT-Aki Server, Launcher, Modules and also making an entire release package.
 
-Also has daily actions built. See [Actions](https://github.com/qe201020335/SPT-AKI_CI/actions).
+Also has daily builds if you want to stay on the bleeding edge of bleeding edge. See [Actions](https://github.com/qe201020335/SPT-AKI_CI/actions).
+> [!IMPORTANT] 
+> Make sure to always backup your profiles before using any builds!
+
+> [!CAUTION]
+> Do NOT report any issues you have using the scripts or builds to the SPT-AKI team!
 
 ## Build Aki Server
 ### Requirements
