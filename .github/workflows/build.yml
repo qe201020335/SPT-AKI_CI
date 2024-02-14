@@ -1,0 +1,124 @@
+name: Build Aki Projects
+
+on:
+  push:
+    branches:
+      - 'master'
+    paths:
+      - '**.ps1'
+      - '**.yml'
+  pull_request:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  job1:
+    name: Build Linux Aki Server
+    strategy:
+      fail-fast: false
+      matrix:
+        branch: ['master', "3.8.0"]
+    
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Build Aki Server
+        id: build
+        shell: pwsh
+        run: ./build_server.ps1 -Overwrite -Branch ${{matrix.branch}}
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.build.outputs.ZIP_NAME }}
+          path: './Server/${{ steps.build.outputs.ZIP_NAME }}'
+          if-no-files-found: error
+          retention-days: 3
+          compression-level: 0
+
+  job2:
+    name: Build Windows Aki Packages
+    strategy:
+      fail-fast: false
+      matrix:
+        versions:
+          [
+            {
+              sbranch: "master",
+              lbranch: "master",
+              mbranch: "master",
+              version: "0.13.5.3.26535",
+            },
+            {
+              sbranch: "3.8.0",
+              lbranch: "3.8.0",
+              mbranch: "3.8.0",
+              version: "0.14.1.0.28744",
+            },
+          ]
+
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+      
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 6
+
+
+      - name: Build Aki Server
+        id: build_server
+        shell: pwsh
+        run: ./build_server.ps1 -Overwrite -Branch ${{ matrix.versions.sbranch }}
+      
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.build_server.outputs.ZIP_NAME }}
+          path: './Server/${{ steps.build_server.outputs.ZIP_NAME }}'
+          if-no-files-found: error
+          retention-days: 3
+
+      
+      - name: Build Aki Modules
+        id: build_modules
+        shell: pwsh
+        run: ./build_modules.ps1 -Overwrite -Branch ${{ matrix.versions.mbranch }} -Url ${{ secrets.DLL_URL }} -TarkovVersion ${{ matrix.versions.version }}
+      
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.build_modules.outputs.ZIP_NAME }}
+          path: './Modules/${{ steps.build_modules.outputs.ZIP_NAME }}'
+          if-no-files-found: error
+          retention-days: 3
+
+
+      - name: Build Aki Launcher
+        id: build_launcher
+        shell: pwsh
+        run: ./build_modules.ps1 -Overwrite -Branch ${{ matrix.versions.lbranch }}
+
+
+      - name: Make Final Package
+        id: build_packege
+        shell: pwsh
+        run: .\build_full_package.ps1 -Overwrite -PkgOnly
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.build_packege.outputs.ZIP_NAME }}
+          path: "./${{ steps.build_packege.outputs.ZIP_NAME }}"
+          if-no-files-found: error
+          retention-days: 3

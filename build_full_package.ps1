@@ -1,5 +1,8 @@
 Param(
     [Parameter(Mandatory=$false)]
+    [Switch] $PkgOnly,
+
+    [Parameter(Mandatory=$false)]
     [Switch] $Overwrite,
 
     [Parameter(Mandatory=$false)]
@@ -11,14 +14,20 @@ Param(
     [Parameter(Mandatory=$false)]
     [string] $LauncherBranch,
 
-    [Parameter(Mandatory=$true)]
+    [Parameter(Mandatory=$false)]
     [string] $TarkovVersion,
 
-    [Parameter(Mandatory=$true)]
+    [Parameter(Mandatory=$false)]
     [string] $Url
 )
 
 $ErrorActionPreference = "Stop"
+
+$NeedBuild = !$PkgOnly
+
+if ($NeedBuild -and ($Url.Length -eq 0 -or $TarkovVersion.Length -eq 0)) {
+    throw "Not PkgOnly, missing Url and/or TarkovVersion"
+}
 
 if ($Overwrite) {
     $OverwriteFlag = "-Overwrite"
@@ -46,25 +55,28 @@ if (Test-Path -Path $OutputFolder) {
     }
 }
 
-# build server
-Write-Output "Building Aki Server"
-pwsh ./build_server.ps1 $OverwriteFlag -Branch $ServerBranch -NoZip
-Get-ChildItem "$ServerBuild"
+if ($NeedBuild) {
+    # build server
+    Write-Output "Building Aki Server"
+    pwsh ./build_server.ps1 $OverwriteFlag -Branch $ServerBranch -NoZip
+    Get-ChildItem "$ServerBuild"
+
+    # build modules
+    Write-Output "Building Aki Modules"
+    Write-Output "Using Aki server compatible tarkov version: $TarkovVersion"
+    pwsh ./build_modules.ps1 $OverwriteFlag -Branch $ModulesBranch -Url $Url -TarkovVersion $TarkovVersion -NoZip
+    Get-ChildItem "$ModulesBuild/BepInEx/plugins/spt"
+
+    # build launcher
+    Write-Output "Building Aki Launcher"
+    pwsh ./build_launcher.ps1 $OverwriteFlag -Branch $LauncherBranch
+    Get-ChildItem "$LauncherBuild"
+}
+
 $AkiMeta = (Get-Content "$ServerBuild/Aki_Data/Server/configs/core.json" | ConvertFrom-Json -AsHashtable)
 Write-Output $akiMeta
-# $TarkovVersion = $akimeta.compatibleTarkovVersion  # this doesn't always work, aki may omit a digit such as 0.13.5.3.26535 => 0.13.5.26535
+$AkiCompatVersion = $akimeta.compatibleTarkovVersion
 $AkiVersion = $akimeta.akiVersion
-
-# build modules
-Write-Output "Building Aki Modules"
-Write-Output "Using Aki server compatible tarkov version: $TarkovVersion"
-pwsh ./build_modules.ps1 $OverwriteFlag -Branch $ModulesBranch -Url $Url -TarkovVersion $TarkovVersion -NoZip
-Get-ChildItem "$ModulesBuild/BepInEx/plugins/spt"
-
-# build launcher
-Write-Output "Building Aki Launcher"
-pwsh ./build_launcher.ps1 $OverwriteFlag -Branch $LauncherBranch
-Get-ChildItem "$LauncherBuild"
 
 # Add extra files
 Write-Output "Adding extra files"
@@ -87,7 +99,7 @@ Copy-Item -Recurse -Force -Path "$ModulesBuild/*" -Destination "$OutputFolder"
 Write-Output "Zipping files"
 Get-ChildItem "$OutputFolder"
 
-$ZipName = "SPT-Aki-$AkiVersion-$TarkovVersion-$(Get-Date -Format "yyyyMMdd").zip"
+$ZipName = "SPT-Aki-$AkiVersion-$AkiCompatVersion-$(Get-Date -Format "yyyyMMdd").zip"
 Compress-Archive -Path "$OutputFolder/*" -DestinationPath "./$ZipName" -Force
 
 Write-Output "Packaged file: $ZipName"
