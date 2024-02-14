@@ -98,10 +98,18 @@ else {
 }
 
 $Suffix = "$Target-v$($akimeta.akiVersion)-$CInfo-Tarkov$($akimeta.compatibleTarkovVersion)"
-$ZipName = "Aki-Server-win-$Suffix"
+
+if ($IsWindows) {
+    $Os = "win"
+}
+else{
+    $Os = "linux"
+}
+
+$ZipName = "Aki-Server-$Os-$Suffix"
 
 if (!$NoZip) {
-    if ($IsWindows -eq $true) {
+    if ($IsWindows) {
         $ZipName = "$ZipName.zip"
         Compress-Archive -Path ./build/* -DestinationPath "../$ZipName" -Force
     }
