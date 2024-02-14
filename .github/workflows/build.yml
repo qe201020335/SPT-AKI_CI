@@ -18,7 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        branch: ['master', "3.8.0"]
+        m: [{branch: 'master', node: 18},{branch: "3.8.0", node: 20}]
     
     runs-on: ubuntu-latest
     
@@ -27,12 +27,12 @@ jobs:
       
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: ${{matrix.m.node}}
 
       - name: Build Aki Server
         id: build
         shell: pwsh
-        run: ./build_server.ps1 -Overwrite -Branch ${{matrix.branch}}
+        run: ./build_server.ps1 -Overwrite -Branch ${{matrix.m.branch}}
 
       - uses: actions/upload-artifact@v4
         with:
@@ -54,12 +54,14 @@ jobs:
               lbranch: "master",
               mbranch: "master",
               version: "0.13.5.3.26535",
+              node: 18
             },
             {
               sbranch: "3.8.0",
               lbranch: "3.8.0",
               mbranch: "3.8.0",
               version: "0.14.1.0.28744",
+              node: 20
             },
           ]
 
@@ -70,7 +72,7 @@ jobs:
       
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version:  ${{ matrix.versions.node }}
       
       - uses: actions/setup-dotnet@v4
         with:
