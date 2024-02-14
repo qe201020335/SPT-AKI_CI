@@ -106,7 +106,7 @@ jobs:
       - name: Build Aki Launcher
         id: build_launcher
         shell: pwsh
-        run: ./build_modules.ps1 -Overwrite -Branch ${{ matrix.versions.lbranch }}
+        run: ./build_launcher.ps1 -Overwrite -Branch ${{ matrix.versions.lbranch }}
 
 
       - name: Make Final Package
