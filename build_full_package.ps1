@@ -6,6 +6,9 @@ Param(
     [Switch] $Overwrite,
 
     [Parameter(Mandatory=$false)]
+    [Switch] $NoZip,
+
+    [Parameter(Mandatory=$false)]
     [string] $ServerBranch,
 
     [Parameter(Mandatory=$false)]
@@ -95,12 +98,14 @@ Copy-Item -Recurse -Force -Path "$LauncherBuild/*" -Destination "$OutputFolder"
 Copy-Item -Recurse -Force -Path "$ServerBuild/*" -Destination "$OutputFolder"
 Copy-Item -Recurse -Force -Path "$ModulesBuild/*" -Destination "$OutputFolder"
 
-# make the final zip
-Write-Output "Zipping files"
+$ZipName = "SPT-Aki-$AkiVersion-$AkiCompatVersion-$(Get-Date -Format "yyyyMMdd")"
 Get-ChildItem "$OutputFolder"
+if (!$NoZip) {
+    # make the final zip
+    $ZipName = "$ZipName.zip"
+    Write-Output "Zipping files"
+    Compress-Archive -Path "$OutputFolder/*" -DestinationPath "./$ZipName" -Force
+    Write-Output "Packaged file: $ZipName"
+}
 
-$ZipName = "SPT-Aki-$AkiVersion-$AkiCompatVersion-$(Get-Date -Format "yyyyMMdd").zip"
-Compress-Archive -Path "$OutputFolder/*" -DestinationPath "./$ZipName" -Force
-
-Write-Output "Packaged file: $ZipName"
 Write-Output "ZIP_NAME=$ZipName" >> "$env:GITHUB_OUTPUT"

@@ -81,12 +81,6 @@ if ($LASTEXITCODE -ne 0) {
     throw ("cake build failed, exit code $LASTEXITCODE")
 }
 
-if ($NoZip) {
-    Exit 0
-}
-
-Get-ChildItem ./build
-
 if ($Branch.Equals("HEAD")) {
     $CInfo = "$Head-$CTimeS"
 } 
@@ -94,8 +88,13 @@ else {
     $CInfo = "$Branch-$Head-$CTimeS"
 }
 
-$ZipName = "Aki-Modules-$CInfo-Tarkov$TarkovVersion.zip"
+$ZipName = "Aki-Modules-$CInfo-Tarkov$TarkovVersion"
 
-Compress-Archive -Path ./build/* -DestinationPath "../$ZipName" -Force
-Write-Output "Built file: $ZipName"
+Get-ChildItem ./build
+if (!$NoZip) {
+    $ZipName = "$ZipName.zip"
+    Compress-Archive -Path ./build/* -DestinationPath "../$ZipName" -Force
+    Write-Output "Built file: $ZipName"
+}
+
 Write-Output "ZIP_NAME=$ZipName" >> "$env:GITHUB_OUTPUT"

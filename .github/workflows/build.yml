@@ -80,27 +80,29 @@ jobs:
       - name: Build Aki Server
         id: build_server
         shell: pwsh
-        run: ./build_server.ps1 -Overwrite -Branch ${{ matrix.versions.sbranch }}
+        run: ./build_server.ps1 -Overwrite -NoZip -Branch ${{ matrix.versions.sbranch }}
       
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.build_server.outputs.ZIP_NAME }}
-          path: './Server/${{ steps.build_server.outputs.ZIP_NAME }}'
+          path: './Server/project/build/*'
           if-no-files-found: error
           retention-days: 3
+          compression-level: 9
 
       
       - name: Build Aki Modules
         id: build_modules
         shell: pwsh
-        run: ./build_modules.ps1 -Overwrite -Branch ${{ matrix.versions.mbranch }} -Url ${{ secrets.DLL_URL }} -TarkovVersion ${{ matrix.versions.version }}
+        run: ./build_modules.ps1 -Overwrite -NoZip -Branch ${{ matrix.versions.mbranch }} -Url ${{ secrets.DLL_URL }} -TarkovVersion ${{ matrix.versions.version }}
       
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.build_modules.outputs.ZIP_NAME }}
-          path: './Modules/${{ steps.build_modules.outputs.ZIP_NAME }}'
+          path: './Modules/project/Build/*'
           if-no-files-found: error
           retention-days: 3
+          compression-level: 9
 
 
       - name: Build Aki Launcher

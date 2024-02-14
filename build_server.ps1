@@ -102,17 +102,19 @@ else {
 }
 
 $Suffix = "$Target-v$($akimeta.akiVersion)-$CInfo-Tarkov$($akimeta.compatibleTarkovVersion)"
+$ZipName = "Aki-Server-win-$Suffix"
 
-if ($IsWindows -eq $true) {
-    $ZipName = "Aki-Server-win-$Suffix.zip"
-    Compress-Archive -Path ./build/* -DestinationPath "../$ZipName" -Force
+if (!$NoZip) {
+    if ($IsWindows -eq $true) {
+        $ZipName = "$ZipName.zip"
+        Compress-Archive -Path ./build/* -DestinationPath "../$ZipName" -Force
+    }
+    else {
+        $ZipName = "$ZipName.tar.gz"
+        Set-Location ./build
+        tar --overwrite -czv -f "../../$ZipName" ./*
+    }
+    Write-Output "Built file: $ZipName"
 }
-else {
-    $ZipName = "Aki-Server-linux-$Suffix.tar.gz"
-    Set-Location ./build
-    tar --overwrite -czv -f "../../$ZipName" ./*
-}
 
-
-Write-Output "Built file: $ZipName"
 Write-Output "ZIP_NAME=$ZipName" >> "$env:GITHUB_OUTPUT"
