@@ -7,6 +7,9 @@ Also has daily builds if you want to stay on the bleeding edge of bleeding edge.
 
 > [!CAUTION]
 > Do NOT report any issues you have using the scripts or builds to the SPT-AKI team!
+>
+> Use them at your own risk!
+
 
 ## Build Aki Server
 ### Requirements
