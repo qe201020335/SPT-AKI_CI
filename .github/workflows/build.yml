@@ -117,6 +117,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.build_packege.outputs.ZIP_NAME }}
-          path: "./${{ steps.build_packege.outputs.ZIP_NAME }}"
+          path: "./output/*"
           if-no-files-found: error
           retention-days: 3
+          compression-level: 9
