@@ -83,10 +83,6 @@ if ($LASTEXITCODE -ne 0) {
     throw ("npm run build:$Target failed, exit code $LASTEXITCODE")
 }
 
-if ($NoZip) {
-    Exit 0
-}
-
 Get-ChildItem ./build
 $AkiMeta = (Get-Content ./build/Aki_Data/Server/configs/core.json | ConvertFrom-Json -AsHashtable)
 Write-Output $akiMeta
