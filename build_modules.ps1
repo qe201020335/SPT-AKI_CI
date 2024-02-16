@@ -73,12 +73,10 @@ Get-ChildItem "./project/Shared/Managed"
 Write-Output "build"
 Set-Location ./project
 dotnet restore
-dotnet tool restore
-dotnet cake
-dotnet cake  # run it twice
+dotnet build
 
 if ($LASTEXITCODE -ne 0) {
-    throw ("cake build failed, exit code $LASTEXITCODE")
+    throw ("dotnet build failed, exit code $LASTEXITCODE")
 }
 
 if ($Branch.Equals("HEAD")) {
