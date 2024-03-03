@@ -25,6 +25,11 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
+
+      - name: Download Aki Server package-lock.json
+        shell: pwsh
+        run: Invoke-WebRequest -Uri "https://dev.sp-tarkov.com/SPT-AKI/Server/raw/branch/${{matrix.m.branch}}/project/package-lock.json" -OutFile "./package-lock.json"
+      
       
       - uses: actions/setup-node@v4
         with:
@@ -78,6 +83,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+
+      - name: Download Aki Server package-lock.json
+        shell: pwsh
+        run: Invoke-WebRequest -Uri "https://dev.sp-tarkov.com/SPT-AKI/Server/raw/branch/${{ matrix.versions.sbranch }}/project/package-lock.json" -OutFile "./package-lock.json"
       
       - uses: actions/setup-node@v4
         with:
