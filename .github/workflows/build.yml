@@ -95,7 +95,7 @@ jobs:
       
       - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 6
+          dotnet-version: 8
 
 
       - name: Build Aki Server
