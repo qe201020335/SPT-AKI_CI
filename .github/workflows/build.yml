@@ -25,16 +25,10 @@ jobs:
     
     steps:
       - uses: actions/checkout@v4
-
-      - name: Download Aki Server package-lock.json
-        shell: pwsh
-        run: Invoke-WebRequest -Uri "https://dev.sp-tarkov.com/SPT-AKI/Server/raw/branch/${{matrix.m.branch}}/project/package-lock.json" -OutFile "./package-lock.json"
-      
-      
+ 
       - uses: actions/setup-node@v4
         with:
           node-version: ${{matrix.m.node}}
-          cache: 'npm'
 
       - name: Build Aki Server
         id: build
@@ -84,19 +78,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Download Aki Server package-lock.json
-        shell: pwsh
-        run: Invoke-WebRequest -Uri "https://dev.sp-tarkov.com/SPT-AKI/Server/raw/branch/${{ matrix.versions.sbranch }}/project/package-lock.json" -OutFile "./package-lock.json"
-      
       - uses: actions/setup-node@v4
         with:
           node-version:  ${{ matrix.versions.node }}
-          cache: 'npm'
       
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8
-
 
       - name: Build Aki Server
         id: build_server

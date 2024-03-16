@@ -77,12 +77,6 @@ else {
 }
 Set-Location ./project
 
-if (!$IsWindows) {
-    if (Test-Path -Path "package-lock.json") {
-        Remove-Item "package-lock.json"  # a temporary fix for bad platform specific dependencies
-    }
-}
-
 npm install
 npm run build:$Target *>&1
 
