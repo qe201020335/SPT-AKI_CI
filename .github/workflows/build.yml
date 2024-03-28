@@ -96,10 +96,13 @@ jobs:
         shell: pwsh
         run: ./build_modules.ps1 -Overwrite -NoZip -Branch ${{ matrix.versions.mbranch }} -Url ${{ secrets.DLL_URL }} -TarkovVersion ${{ matrix.versions.version }}
 
-      - name: Build Aki Launcher
-        id: build_launcher
-        shell: pwsh
-        run: ./build_launcher.ps1 -Overwrite -Branch ${{ matrix.versions.lbranch }}
+      - name: Build Aki Launcher with Retry
+        uses: nick-fields/retry@v3
+        with:
+          timeout_seconds: 150
+          max_attempts: 3
+          shell: pwsh
+          command: ./build_launcher.ps1 -Overwrite -Branch ${{ matrix.versions.lbranch }}
 
       - name: Make Final Package
         id: build_packege
