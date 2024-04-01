@@ -58,12 +58,6 @@ $CTimeS = (([System.DateTimeOffset]::FromUnixTimeSeconds($CTime)).DateTime).ToSt
 
 Write-Output "Current HEAD is at $Head in $Branch committed at $CTimeS"
 
-$Tag = git describe --tags --abbrev=0 $Head
-$IsTag = $LASTEXITCODE -eq 0
-if ($IsTag) {
-    Write-Output "We also have a tag $Tag at HEAD"
-}
-
 Write-Output "lfs"
 git lfs fetch
 git lfs pull
@@ -88,10 +82,7 @@ Get-ChildItem ./build
 $AkiMeta = (Get-Content ./build/Aki_Data/Server/configs/core.json | ConvertFrom-Json -AsHashtable)
 Write-Output $akiMeta
 
-if ($IsTag) {
-    $CInfo = "tag-$Tag"
-}
-elseif ($Branch.Equals("HEAD")) {
+if ($Branch.Equals("HEAD")) {
     $CInfo = "$Head-$CTimeS"
 } 
 else {

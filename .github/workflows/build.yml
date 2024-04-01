@@ -105,9 +105,9 @@ jobs:
           command: ./build_launcher.ps1 -Overwrite -Branch ${{ matrix.versions.lbranch }}
 
       - name: Make Final Package
-        id: build_packege
+        id: build_package
         shell: pwsh
-        run: .\build_full_package.ps1 -Overwrite -PkgOnly
+        run: .\build_full_package.ps1 -Overwrite -PkgOnly -NoZip
 
       - uses: actions/upload-artifact@v4
         with:
@@ -127,7 +127,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: ${{ steps.build_packege.outputs.ZIP_NAME }}
+          name: ${{ steps.build_package.outputs.ZIP_NAME }}
           path: "./output/*"
           if-no-files-found: error
           retention-days: 3
