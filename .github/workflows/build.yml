@@ -18,8 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # m: [{branch: 'master', node: 18},{branch: "3.8.0", node: 20}]
-        m: [{branch: "3.8.0", node: 20}]
+        m: [{branch: "3.8.0", node: 20},{branch: "DEV_3.9.0", node: 20}]
     
     runs-on: ubuntu-latest
     
@@ -49,29 +48,22 @@ jobs:
       fail-fast: false
       matrix:
         versions:
-          [{
+          [
+            {
             sbranch: "3.8.0",
             lbranch: "3.8.0",
             mbranch: "3.8.0",
             version: "0.14.1.2.29197",
             node: 20
-          }]
-          # [
-          #   {
-          #     sbranch: "master",
-          #     lbranch: "master",
-          #     mbranch: "master",
-          #     version: "0.13.5.3.26535",
-          #     node: 18
-          #   },
-          #   {
-          #     sbranch: "3.8.0",
-          #     lbranch: "3.8.0",
-          #     mbranch: "3.8.0",
-          #     version: "0.14.1.0.28744",
-          #     node: 20
-          #   },
-          # ]
+            },
+            {
+              sbranch: "DEV_3.9.0",
+              lbranch: "DEV_3.9.0",
+              mbranch: "DEV_3.9.0",
+              version: "0.14.5.0.29577",
+              node: 20
+            }
+          ]
 
     runs-on: windows-latest
 
