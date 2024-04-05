@@ -51,16 +51,16 @@ jobs:
           [
             {
               sbranch: "3.8.1-DEV",
-              lbranch: "3.8.0",
-              mbranch: "3.8.0",
+              lbranch: "3.8.1-DEV",
+              mbranch: "3.8.1-DEV",
               version: "0.14.1.2.29197",
               node: 20
             },
             {
               sbranch: "3.9.0-DEV",
-              lbranch: "DEV_3.9.0",
-              mbranch: "DEV_3.9.0",
-              version: "0.14.5.0.29577",
+              lbranch: "3.9.0-DEV",
+              mbranch: "3.9.0-DEV",
+              version: "0.14.5.1.29624",
               node: 20
             }
           ]
