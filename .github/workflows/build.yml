@@ -18,7 +18,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        m: [{branch: "3.8.1-DEV", node: 20},{branch: "3.9.0-DEV", node: 20}]
+        m: 
+          [
+            # {
+            #   branch: "3.8.1-DEV",
+            #   node: 20
+            # },
+            {
+              branch: "3.9.0-DEV", 
+              node: 20
+            }
+          ]
     
     runs-on: ubuntu-latest
     
@@ -49,13 +59,13 @@ jobs:
       matrix:
         versions:
           [
-            {
-              sbranch: "3.8.1-DEV",
-              lbranch: "3.8.1-DEV",
-              mbranch: "3.8.1-DEV",
-              version: "0.14.1.2.29197",
-              node: 20
-            },
+            # {
+            #   sbranch: "3.8.1-DEV",
+            #   lbranch: "3.8.1-DEV",
+            #   mbranch: "3.8.1-DEV",
+            #   version: "0.14.1.2.29197",
+            #   node: 20
+            # },
             {
               sbranch: "3.9.0-DEV",
               lbranch: "3.9.0-DEV",
