@@ -76,7 +76,7 @@ if ($NeedBuild) {
     Get-ChildItem "$LauncherBuild"
 }
 
-$AkiMeta = (Get-Content "$ServerBuild/Aki_Data/Server/configs/core.json" | ConvertFrom-Json -AsHashtable)
+$AkiMeta = (Get-Content "$ServerBuild/SPT_Data/Server/configs/core.json" | ConvertFrom-Json -AsHashtable)
 Write-Output $akiMeta
 $AkiCompatVersion = $akimeta.compatibleTarkovVersion
 $AkiVersion = $akimeta.akiVersion

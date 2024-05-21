@@ -16,7 +16,7 @@ Param(
 )
 
 $ErrorActionPreference = "Stop"
-$SOURCE_REPO = "https://dev.sp-tarkov.com/SPT-AKI/Server.git"
+$SOURCE_REPO = "https://dev.sp-tarkov.com/SPT/Server.git"
 $SERVER_DIR = "./Server"
 
 $BuildOnCommit = $Commit.Length -gt 0
@@ -80,7 +80,7 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Get-ChildItem ./build
-$AkiMeta = (Get-Content ./build/Aki_Data/Server/configs/core.json | ConvertFrom-Json -AsHashtable)
+$AkiMeta = (Get-Content ./build/SPT_Data/Server/configs/core.json | ConvertFrom-Json -AsHashtable)
 Write-Output $akiMeta
 
 if ($BuildOnCommit) {
