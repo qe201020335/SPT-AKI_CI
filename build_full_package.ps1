@@ -79,7 +79,7 @@ if ($NeedBuild) {
 $AkiMeta = (Get-Content "$ServerBuild/SPT_Data/Server/configs/core.json" | ConvertFrom-Json -AsHashtable)
 Write-Output $akiMeta
 $AkiCompatVersion = $akimeta.compatibleTarkovVersion
-$AkiVersion = $akimeta.akiVersion
+$AkiVersion = $akimeta.sptVersion
 
 # Add extra files
 Write-Output "Adding extra files"

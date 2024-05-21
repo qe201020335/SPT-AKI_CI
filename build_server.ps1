@@ -90,7 +90,7 @@ else {
     $CInfo = "$Branch-$Head-$CTimeS"
 }
 
-$Suffix = "$Target-v$($akimeta.akiVersion)-$CInfo-Tarkov$($akimeta.compatibleTarkovVersion)"
+$Suffix = "$Target-v$($akimeta.sptVersion)-$CInfo-Tarkov$($akimeta.compatibleTarkovVersion)"
 
 if ($IsWindows) {
     $Os = "win"
