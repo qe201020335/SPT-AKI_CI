@@ -61,7 +61,7 @@ if (Test-Path -Path $OutputFolder) {
 if ($NeedBuild) {
     # build server
     Write-Output "Building Aki Server"
-    pwsh ./build_server.ps1 $OverwriteFlag -Branch $ServerBranch -NoZip
+    pwsh ./build_server.ps1 $OverwriteFlag -Branch $ServerBranch -NoZip -Release
     Get-ChildItem "$ServerBuild"
 
     # build modules
