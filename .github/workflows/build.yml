@@ -68,8 +68,8 @@ jobs:
           compression-level: 9      
 
       - uses: actions/upload-artifact@v4
+        if: ${{matrix.os.zip}}
         with:
-          if: ${{matrix.os.zip}}
           name: ${{ steps.build.outputs.ZIP_NAME }}
           path: './Server/${{ steps.build.outputs.ZIP_NAME }}'
           if-no-files-found: error
