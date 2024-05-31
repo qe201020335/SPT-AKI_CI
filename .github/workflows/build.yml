@@ -94,7 +94,7 @@ jobs:
               sbranch: "master",
               lbranch: "master",
               mbranch: "master",
-              version: "0.14.8.5.30150",
+              version: "0.14.8.6.30268",
               node: 20
             }
           ]
