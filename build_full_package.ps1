@@ -44,7 +44,7 @@ $ModulesBuild = "./Modules/project/Build"
 $LauncherBuild = "./Launcher/project/Build"
 
 $PackagerSouceZipLink = "https://dev.sp-tarkov.com/SPT-AKI/release-packager-tool/archive/main.zip"
-$BepInExLink = "https://github.com/BepInEx/BepInEx/releases/download/v5.4.22/BepInEx_x64_5.4.22.0.zip"
+$BepInExLink = "https://github.com/BepInEx/BepInEx/releases/download/v5.4.23.1/BepInEx_win_x64_5.4.23.1.zip"
 $OutputFolder = "./output"
 
 if (Test-Path -Path $OutputFolder) {
