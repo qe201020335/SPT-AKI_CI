@@ -1,5 +1,4 @@
-# SPT-AKI_CI
-[![action status](https://img.shields.io/github/actions/workflow/status/qe201020335/SPT-AKI_CI/build.yml?branch=master&style=for-the-badge)](https://github.com/qe201020335/SPT-AKI_CI/actions)
+# SPT-AKI_CI <a href="https://github.com/qe201020335/SPT-AKI_CI/actions"><img src="https://img.shields.io/github/actions/workflow/status/qe201020335/SPT-AKI_CI/build.yml?branch=master&style=for-the-badge" alt="GitHub Actions status" align="right"></a>
 
 Scripts for building SPT-Aki Server, Launcher, Modules and also making an entire release package.
 
