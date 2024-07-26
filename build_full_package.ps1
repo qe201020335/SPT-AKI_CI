@@ -43,8 +43,7 @@ $ServerBuild = "./Server/project/build"
 $ModulesBuild = "./Modules/project/Build"
 $LauncherBuild = "./Launcher/project/Build"
 
-$PackagerSouceZipLink = "https://dev.sp-tarkov.com/SPT-AKI/release-packager-tool/archive/main.zip"
-$BepInExLink = "https://github.com/BepInEx/BepInEx/releases/download/v5.4.23.2/BepInEx_win_x64_5.4.23.2.zip"
+$PackagerSouceZipLink = "https://dev.sp-tarkov.com/SPT/Build/archive/main.zip"
 $OutputFolder = "./output"
 
 if (Test-Path -Path $OutputFolder) {
@@ -82,16 +81,12 @@ $AkiCompatVersion = $akimeta.compatibleTarkovVersion
 $AkiVersion = $akimeta.sptVersion
 
 # Add extra files
-Write-Output "Adding extra files"
-Invoke-WebRequest -Uri "$BepInExLink" -OutFile "./bepinex.zip"
-Expand-Archive -Path "./bepinex.zip" -DestinationPath "$OutputFolder" -Force
-
 Invoke-WebRequest -Uri "$PackagerSouceZipLink" -OutFile "./packager.zip"
 if (Test-Path -Path "./PackagerFiles") {
     Remove-Item -Recurse -Force "./PackagerFiles"
 }
 Expand-Archive -Path "./packager.zip" -DestinationPath "./PackagerFiles"
-Copy-Item -Recurse -Force -Path "./PackagerFiles/release-packager-tool/Release-Packager/Release-Packager/BepinExFiles/*" -Destination "$OutputFolder"
+Copy-Item -Recurse -Force -Path "./PackagerFiles/build/static-assets/" -Destination "$OutputFolder"
 
 Write-Output "Copying Aki projects"
 Copy-Item -Recurse -Force -Path "$LauncherBuild/*" -Destination "$OutputFolder"
