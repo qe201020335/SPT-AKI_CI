@@ -2,9 +2,7 @@
 
 Scripts for building SPT-Aki Server, Launcher, Modules and also making an entire release package.
 
-~~Also has daily builds if you want to stay on the bleeding edge of bleeding edge. See [Actions](https://github.com/qe201020335/SPT-AKI_CI/actions).~~
-
-**Daily build is temporarily disabled because I am away at the moment and I don't have access to game files.**
+Also has daily builds if you want to stay on the bleeding edge of bleeding edge. See [Actions](https://github.com/qe201020335/SPT-AKI_CI/actions).
 
 > [!IMPORTANT] 
 > Make sure to always backup your profiles before using any builds!
