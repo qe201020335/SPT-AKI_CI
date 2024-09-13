@@ -72,7 +72,7 @@ else {
 }
 Set-Location ./project
 
-npm install
+npm install --force
 npm run build:$Target *>&1
 
 if ($LASTEXITCODE -ne 0) {
