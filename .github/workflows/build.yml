@@ -94,7 +94,7 @@ jobs:
               sbranch: "3.10.0-DEV",
               lbranch: "3.10.0-DEV",
               mbranch: "310-dev",
-              version: "0.15.0.3.32291",
+              version: "0.15.2.0.32678",
               node: 20
             }
           ]
