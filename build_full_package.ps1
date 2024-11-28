@@ -43,7 +43,7 @@ $ServerBuild = "./Server/project/build"
 $ModulesBuild = "./Modules/project/Build"
 $LauncherBuild = "./Launcher/project/Build"
 
-$PackagerSouceZipLink = "https://dev.sp-tarkov.com/SPT/Build/archive/main.zip"
+$PackagerSouceZipLink = "https://github.com/sp-tarkov/build/archive/refs/heads/main.zip"
 $OutputFolder = "./output"
 
 if (Test-Path -Path $OutputFolder) {
@@ -86,7 +86,7 @@ if (Test-Path -Path "./PackagerFiles") {
     Remove-Item -Recurse -Force "./PackagerFiles"
 }
 Expand-Archive -Path "./packager.zip" -DestinationPath "./PackagerFiles"
-Copy-Item -Recurse -Force -Path "./PackagerFiles/build/static-assets/" -Destination "$OutputFolder"
+Copy-Item -Recurse -Force -Path "./PackagerFiles/build-main/static-assets/" -Destination "$OutputFolder"
 
 Write-Output "Copying Aki projects"
 Copy-Item -Recurse -Force -Path "$LauncherBuild/*" -Destination "$OutputFolder"

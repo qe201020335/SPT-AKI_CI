@@ -35,7 +35,7 @@ Build the `0.13.5.0` branch
 ```pwsh
 pwsh ./build_server.ps1 -Branch 0.13.5.0
 ```
-Build a tag. Find out tag names on SPT-Aki's source repo. [Tags](https://dev.sp-tarkov.com/SPT-AKI/Server/tags) 
+Build a tag. Find out tag names on SPT-Aki's source repo. [Tags](https://github.com/sp-tarkov/server/tags) 
 ```pwsh
 pwsh ./build_server.ps1 -Branch 3.7.2
 ```

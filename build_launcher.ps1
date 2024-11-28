@@ -8,7 +8,7 @@ Param(
 
 $ErrorActionPreference = "Stop"
 $SOURCE_DIR = "./Launcher"
-$SOURCE_REPO = "https://dev.sp-tarkov.com/SPT/Launcher.git"
+$SOURCE_REPO = "https://github.com/sp-tarkov/launcher.git"
 
 $BuildOnCommit = $Commit.Length -gt 0
 

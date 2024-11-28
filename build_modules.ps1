@@ -20,7 +20,7 @@ Param(
 
 $ErrorActionPreference = "Stop"
 $SOURCE_DIR = "./Modules"
-$SOURCE_REPO = "https://dev.sp-tarkov.com/SPT/Modules.git"
+$SOURCE_REPO = "https://github.com/sp-tarkov/modules.git"
 
 $BuildOnCommit = $Commit.Length -gt 0
 

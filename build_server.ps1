@@ -16,7 +16,7 @@ Param(
 )
 
 $ErrorActionPreference = "Stop"
-$SOURCE_REPO = "https://dev.sp-tarkov.com/SPT/Server.git"
+$SOURCE_REPO = "https://github.com/sp-tarkov/server.git"
 $SERVER_DIR = "./Server"
 
 $BuildOnCommit = $Commit.Length -gt 0
