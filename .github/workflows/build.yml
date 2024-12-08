@@ -25,7 +25,7 @@ jobs:
             #   node: 20
             # },
             {
-              branch: "3.10.2-dev", 
+              branch: "3.10.3-DEV", 
               node: 20
             }
           ]
@@ -91,7 +91,7 @@ jobs:
             #   node: 20
             # },
             {
-              sbranch: "3.10.2-dev",
+              sbranch: "3.10.3-DEV",
               lbranch: "3.10.2-dev",
               mbranch: "3.10.2-dev",
               version: "0.15.5.1.33420",
