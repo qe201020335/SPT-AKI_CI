@@ -92,8 +92,8 @@ jobs:
             # },
             {
               sbranch: "3.10.3-DEV",
-              lbranch: "3.10.2-dev",
-              mbranch: "3.10.2-dev",
+              lbranch: "3.10.3-dev",
+              mbranch: "3.10.3-dev",
               version: "0.15.5.1.33420",
               node: 20
             }
