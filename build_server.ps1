@@ -80,8 +80,8 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Get-ChildItem ./build
-$AkiMeta = (Get-Content ./build/SPT_Data/Server/configs/core.json | ConvertFrom-Json -AsHashtable)
-Write-Output $akiMeta
+$SPTMeta = (Get-Content ./build/SPT_Data/Server/configs/core.json | ConvertFrom-Json -AsHashtable)
+Write-Output $SPTMeta
 
 if ($BuildOnCommit) {
     $CInfo = "$Head-$CTimeS"
@@ -90,7 +90,7 @@ else {
     $CInfo = "$Branch-$Head-$CTimeS"
 }
 
-$Suffix = "$Target-v$($akimeta.sptVersion)-$CInfo-Tarkov$($akimeta.compatibleTarkovVersion)"
+$Suffix = "$Target-v$($SPTmeta.sptVersion)-$CInfo-Tarkov$($SPTmeta.compatibleTarkovVersion)"
 
 if ($IsWindows) {
     $Os = "win"

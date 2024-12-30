@@ -59,26 +59,26 @@ if (Test-Path -Path $OutputFolder) {
 
 if ($NeedBuild) {
     # build server
-    Write-Output "Building Aki Server"
+    Write-Output "Building SPT Server"
     pwsh ./build_server.ps1 $OverwriteFlag -Branch $ServerBranch -NoZip -Release
     Get-ChildItem "$ServerBuild"
 
     # build modules
-    Write-Output "Building Aki Modules"
-    Write-Output "Using Aki server compatible tarkov version: $TarkovVersion"
+    Write-Output "Building SPT Modules"
+    Write-Output "Using SPT server compatible tarkov version: $TarkovVersion"
     pwsh ./build_modules.ps1 $OverwriteFlag -Branch $ModulesBranch -Url $Url -TarkovVersion $TarkovVersion -NoZip
     Get-ChildItem "$ModulesBuild/BepInEx/plugins/spt"
 
     # build launcher
-    Write-Output "Building Aki Launcher"
+    Write-Output "Building SPT Launcher"
     pwsh ./build_launcher.ps1 $OverwriteFlag -Branch $LauncherBranch
     Get-ChildItem "$LauncherBuild"
 }
 
-$AkiMeta = (Get-Content "$ServerBuild/SPT_Data/Server/configs/core.json" | ConvertFrom-Json -AsHashtable)
-Write-Output $akiMeta
-$AkiCompatVersion = $akimeta.compatibleTarkovVersion
-$AkiVersion = $akimeta.sptVersion
+$SPTMeta = (Get-Content "$ServerBuild/SPT_Data/Server/configs/core.json" | ConvertFrom-Json -AsHashtable)
+Write-Output $SPTMeta
+$SPTCompatVersion = $SPTmeta.compatibleTarkovVersion
+$SPTVersion = $SPTmeta.sptVersion
 
 # Add extra files
 Invoke-WebRequest -Uri "$PackagerSouceZipLink" -OutFile "./packager.zip"
@@ -88,12 +88,12 @@ if (Test-Path -Path "./PackagerFiles") {
 Expand-Archive -Path "./packager.zip" -DestinationPath "./PackagerFiles"
 Copy-Item -Recurse -Force -Path "./PackagerFiles/build-main/static-assets/" -Destination "$OutputFolder"
 
-Write-Output "Copying Aki projects"
+Write-Output "Copying SPT projects"
 Copy-Item -Recurse -Force -Path "$LauncherBuild/*" -Destination "$OutputFolder"
 Copy-Item -Recurse -Force -Path "$ServerBuild/*" -Destination "$OutputFolder"
 Copy-Item -Recurse -Force -Path "$ModulesBuild/*" -Destination "$OutputFolder"
 
-$ZipName = "SPT-$AkiVersion-$AkiCompatVersion-$(Get-Date -Format "yyyyMMdd")"
+$ZipName = "SPT-$SPTVersion-$SPTCompatVersion-$(Get-Date -Format "yyyyMMdd")"
 Get-ChildItem "$OutputFolder"
 if (!$NoZip) {
     # make the final zip

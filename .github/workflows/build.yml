@@ -1,4 +1,4 @@
-name: Build Aki Projects
+name: Build SPT Projects
 
 on:
   push:
@@ -14,7 +14,7 @@ on:
 
 jobs:
   job1:
-    name: Build Aki Server
+    name: Build SPT Server
     strategy:
       fail-fast: false
       matrix:
@@ -53,7 +53,7 @@ jobs:
         with:
           node-version: ${{matrix.m.node}}
 
-      - name: Build Aki Server
+      - name: Build SPT Server
         id: build
         shell: pwsh
         run: ./build_server.ps1 -Overwrite -Branch ${{matrix.m.branch}} ${{matrix.dbg}} ${{matrix.os.flags}}
@@ -77,7 +77,7 @@ jobs:
           compression-level: 0
 
   job2:
-    name: Build Windows Aki Packages
+    name: Build Windows SPT Packages
     strategy:
       fail-fast: false
       matrix:
@@ -112,17 +112,17 @@ jobs:
         with:
           dotnet-version: 8
 
-      - name: Build Aki Server
+      - name: Build SPT Server
         id: build_server
         shell: pwsh
         run: ./build_server.ps1 -Overwrite -NoZip -Branch ${{ matrix.versions.sbranch }} -Release
    
-      - name: Build Aki Modules
+      - name: Build SPT Modules
         id: build_modules
         shell: pwsh
         run: ./build_modules.ps1 -Overwrite -NoZip -Branch ${{ matrix.versions.mbranch }} -Url ${{ secrets.DLL_URL }} -TarkovVersion ${{ matrix.versions.version }}
 
-      - name: Build Aki Launcher with Retry
+      - name: Build SPT Launcher with Retry
         uses: nick-fields/retry@v3
         with:
           timeout_seconds: 150
