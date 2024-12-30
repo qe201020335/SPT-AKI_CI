@@ -74,7 +74,7 @@ Get-ChildItem "./project/Shared/Managed"
 Write-Output "build"
 Set-Location ./project
 dotnet restore
-dotnet build
+dotnet build SPT.Build
 
 if ($LASTEXITCODE -ne 0) {
     throw ("dotnet build failed, exit code $LASTEXITCODE")
