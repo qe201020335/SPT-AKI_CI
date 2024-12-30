@@ -99,7 +99,7 @@ else{
     $Os = "linux"
 }
 
-$ZipName = "Aki-Server-$Os-$Suffix"
+$ZipName = "SPT-Server-$Os-$Suffix"
 
 if (!$NoZip) {
     if ($IsWindows) {

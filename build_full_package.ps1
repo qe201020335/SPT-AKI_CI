@@ -93,7 +93,7 @@ Copy-Item -Recurse -Force -Path "$LauncherBuild/*" -Destination "$OutputFolder"
 Copy-Item -Recurse -Force -Path "$ServerBuild/*" -Destination "$OutputFolder"
 Copy-Item -Recurse -Force -Path "$ModulesBuild/*" -Destination "$OutputFolder"
 
-$ZipName = "SPT-Aki-$AkiVersion-$AkiCompatVersion-$(Get-Date -Format "yyyyMMdd")"
+$ZipName = "SPT-$AkiVersion-$AkiCompatVersion-$(Get-Date -Format "yyyyMMdd")"
 Get-ChildItem "$OutputFolder"
 if (!$NoZip) {
     # make the final zip

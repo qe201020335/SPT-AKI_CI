@@ -87,7 +87,7 @@ else {
     $CInfo = "$Branch-$Head-$CTimeS"
 }
 
-$ZipName = "Aki-Modules-$CInfo-Tarkov$TarkovVersion"
+$ZipName = "SPT-Modules-$CInfo-Tarkov$TarkovVersion"
 
 Get-ChildItem ./build
 if (!$NoZip) {
