@@ -94,7 +94,7 @@ jobs:
               sbranch: "4.0.0-DEV",
               lbranch: "4.0.0-DEV",
               mbranch: "4.0.0-DEV",
-              version: "0.16.0.2.34510",
+              version: "0.16.1.0.34568",
               node: 22
             }
           ]
