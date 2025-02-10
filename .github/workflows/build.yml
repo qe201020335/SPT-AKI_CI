@@ -25,7 +25,7 @@ jobs:
             #   node: 20
             # },
             {
-              branch: "4.0.0-DEV",
+              branch: "3.11.0-dev",
               node: 22
             }
           ]
@@ -91,10 +91,10 @@ jobs:
             #   node: 20
             # },
             {
-              sbranch: "4.0.0-DEV",
+              sbranch: "3.11.0-dev",
               lbranch: "4.0.0-DEV",
               mbranch: "4.0.0-DEV",
-              version: "0.16.1.0.34720",
+              version: "0.16.1.0.34861",
               node: 22
             }
           ]
