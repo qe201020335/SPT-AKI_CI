@@ -16,7 +16,7 @@ Also has daily builds if you want to stay on the bleeding edge of bleeding edge.
 ## Build SPT Server
 ### Requirements
 * PowerShell
-* Node 18
+* Node 20 (3.10.x) or Node 22 (3.11.x)
 * Git
 * Git lfs
 ### Parameters
