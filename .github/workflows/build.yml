@@ -6,7 +6,8 @@ on:
       - 'master'
     paths:
       - '**.ps1'
-      - '**.yml'
+      - '.github/workflows/build.yml'
+      - '!build_server_csharp.ps1'
   pull_request:
   schedule:
     - cron: '0 0 * * *'

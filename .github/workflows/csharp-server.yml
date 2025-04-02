@@ -1,0 +1,75 @@
+name: Build SPT CSharp Server
+
+on:
+  push:
+    branches:
+      - 'master'
+    paths:
+      - 'build_server_csharp.ps1'
+      - '.github/workflows/csharp-server.yml'
+  pull_request:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  job1:
+    name: Build CSharp Server
+    strategy:
+      fail-fast: false
+      matrix:
+        b: 
+          [
+            {
+              branch: "master",
+              dotnet: 9
+            }
+          ]
+        r: 
+          [
+            {
+              plat: "win",
+              zflag: "-NoZip",
+              zip: false
+            },
+            {
+              plat: "linux",
+              zflag: "",
+              zip: true
+            }
+          ]
+        arch: ["x64", "arm64"]
+        dbg: ["", "-Release"]
+        sc: ["", "-SelfContained"]
+    
+    runs-on: "ubuntu-latest"
+    
+    steps:
+      - uses: actions/checkout@v4
+ 
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{matrix.b.dotnet}}
+
+      - name: Build SPT CSharp Server
+        id: build
+        shell: pwsh
+        run: ./build_server_csharp.ps1 -Overwrite -Branch ${{matrix.b.branch}} ${{matrix.dbg}} ${{matrix.sc}} -Runtime ${{matrix.r.plat}}-${{matrix.arch}} ${{matrix.r.zflag}}
+
+      - uses: actions/upload-artifact@v4
+        if: ${{! matrix.r.zip}}
+        with:
+          name: ${{ steps.build.outputs.ZIP_NAME }}
+          path: './server-csharp/project/build/*'
+          if-no-files-found: error
+          retention-days: 3
+          compression-level: 9      
+
+      - uses: actions/upload-artifact@v4
+        if: ${{matrix.r.zip}}
+        with:
+          name: ${{ steps.build.outputs.ZIP_NAME }}
+          path: './server-csharp/${{ steps.build.outputs.ZIP_NAME }}'
+          if-no-files-found: error
+          retention-days: 3
+          compression-level: 0
