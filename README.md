@@ -1,6 +1,6 @@
 # SPT-AKI_CI <a href="https://github.com/qe201020335/SPT-AKI_CI/actions"><img src="https://img.shields.io/github/actions/workflow/status/qe201020335/SPT-AKI_CI/build.yml?branch=master&style=for-the-badge" alt="GitHub Actions status" align="right"></a>
 
-Scripts for building SPT Server, SPT .NET Server, Launcher, Modules and also making an entire release package.
+Scripts for building [SPT Server](https://github.com/sp-tarkov/server), [SPT .NET Server](https://github.com/sp-tarkov/server-csharp), [SPT Launcher](https://github.com/sp-tarkov/launcher), [SPT Modules](https://github.com/sp-tarkov/modules) and also making an entire release package.
 
 Also has daily builds if you want to stay on the bleeding edge of bleeding edge. See [Actions](https://github.com/qe201020335/SPT-AKI_CI/actions).
 
