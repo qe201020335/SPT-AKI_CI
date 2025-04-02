@@ -3,4 +3,5 @@ Modules/
 Launcher/
 output/
 PackagerFiles/
+server-csharp/
 *.zip

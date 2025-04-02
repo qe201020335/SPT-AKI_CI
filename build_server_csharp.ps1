@@ -94,7 +94,7 @@ else {
 }
 
 Write-Output "dotnet publish -c $Configuration -r $Runtime $SCFlag -o ./Build ./SPTarkov.Server"
-dotnet publish -c $Configuration -r $Runtime $SCFlag -o ./Build .\SPTarkov.Server\
+dotnet publish -c $Configuration -r $Runtime $SCFlag -o ./Build ./SPTarkov.Server
 
 if ($LASTEXITCODE -ne 0) {
     throw ("dotnet publish failed, exit code $LASTEXITCODE")
@@ -113,7 +113,7 @@ else {
 
 Write-Output $Suffix
 $Suffix = "$Suffix-v$($SPTmeta.sptVersion)-$CInfo-Tarkov$($SPTmeta.compatibleTarkovVersion)"
-$ZipName = "SPT-Server-$Suffix"
+$ZipName = "SPTarkov.Server-$Suffix"
 Write-Output $ZipName
 
 if (!$NoZip) {

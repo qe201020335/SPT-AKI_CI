@@ -14,14 +14,14 @@ on:
 
 jobs:
   job1:
-    name: Build CSharp Server
+    name: Build SPTarkov.Server
     strategy:
       fail-fast: false
       matrix:
         b: 
           [
             {
-              branch: "master",
+              branch: "main",
               dotnet: 9
             }
           ]
@@ -51,7 +51,7 @@ jobs:
         with:
           dotnet-version: ${{matrix.b.dotnet}}
 
-      - name: Build SPT CSharp Server
+      - name: Build SPTarkov.Server
         id: build
         shell: pwsh
         run: ./build_server_csharp.ps1 -Overwrite -Branch ${{matrix.b.branch}} ${{matrix.dbg}} ${{matrix.sc}} -Runtime ${{matrix.r.plat}}-${{matrix.arch}} ${{matrix.r.zflag}}
@@ -60,7 +60,7 @@ jobs:
         if: ${{! matrix.r.zip}}
         with:
           name: ${{ steps.build.outputs.ZIP_NAME }}
-          path: './server-csharp/project/build/*'
+          path: './server-csharp/Build/*'
           if-no-files-found: error
           retention-days: 3
           compression-level: 9      
