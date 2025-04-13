@@ -14,69 +14,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  job1:
-    name: Build SPT Server
-    strategy:
-      fail-fast: false
-      matrix:
-        m: 
-          [
-            # {
-            #   branch: "3.10.5-DEV", 
-            #   node: 20
-            # },
-            {
-              branch: "3.11.x-dev",
-              node: 22
-            }
-          ]
-        os: 
-          [
-            {
-              os: "windows-latest",
-              flags: "-NoZip",
-              zip: false
-            },
-            {
-              os: "ubuntu-latest",
-              flags: "",
-              zip: true
-            }
-          ]
-        dbg: ["", "-Release"]
-    
-    runs-on: ${{matrix.os.os}}
-    
-    steps:
-      - uses: actions/checkout@v4
- 
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{matrix.m.node}}
-
-      - name: Build SPT Server
-        id: build
-        shell: pwsh
-        run: ./build_server.ps1 -Overwrite -Branch ${{matrix.m.branch}} ${{matrix.dbg}} ${{matrix.os.flags}}
-
-      - uses: actions/upload-artifact@v4
-        if: ${{! matrix.os.zip}}
-        with:
-          name: ${{ steps.build.outputs.ZIP_NAME }}
-          path: './Server/project/build/*'
-          if-no-files-found: error
-          retention-days: 3
-          compression-level: 9      
-
-      - uses: actions/upload-artifact@v4
-        if: ${{matrix.os.zip}}
-        with:
-          name: ${{ steps.build.outputs.ZIP_NAME }}
-          path: './Server/${{ steps.build.outputs.ZIP_NAME }}'
-          if-no-files-found: error
-          retention-days: 3
-          compression-level: 0
-
   job2:
     name: Build Windows SPT Packages
     strategy:
