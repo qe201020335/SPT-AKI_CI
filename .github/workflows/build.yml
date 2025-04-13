@@ -53,11 +53,13 @@ jobs:
           dotnet-version: 9
 
       - name: Build SPT Node Server
+        id: build_node_server
         if: ${{!matrix.versions.v4}}
         shell: pwsh
         run: ./build_server.ps1 -Overwrite -NoZip -Branch ${{ matrix.versions.sbranch }} -Release
    
       - name: Build SPT .NET Server
+        id: build_csharp_server
         if: ${{matrix.versions.v4}}
         shell: pwsh
         run: ./build_server_csharp.ps1 -Overwrite -NoZip -Branch ${{ matrix.versions.sbranch }} -Release -SelfContained
@@ -76,6 +78,24 @@ jobs:
         id: build_package
         shell: pwsh
         run: .\build_full_package.ps1 -Overwrite ${{matrix.versions.v4Flag}} -PkgOnly -NoZip
+
+      - uses: actions/upload-artifact@v4
+        if: ${{!matrix.versions.v4}}
+        with:
+          name: ${{ steps.build_node_server.outputs.ZIP_NAME }}
+          path: './Server/project/build/*'
+          if-no-files-found: error
+          retention-days: 3
+          compression-level: 9
+          
+      - uses: actions/upload-artifact@v4
+        if: ${{matrix.versions.v4}}
+        with:
+          name: ${{ steps.build_csharp_server.outputs.ZIP_NAME }}
+          path: './server-csharp/Build/*'
+          if-no-files-found: error
+          retention-days: 3
+          compression-level: 9
 
       - uses: actions/upload-artifact@v4
         with:
