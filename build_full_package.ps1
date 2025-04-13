@@ -9,6 +9,9 @@ Param(
     [Switch] $NoZip,
 
     [Parameter(Mandatory=$false)]
+    [Switch] $IsV4,
+
+    [Parameter(Mandatory=$false)]
     [string] $ServerBranch,
 
     [Parameter(Mandatory=$false)]
@@ -42,6 +45,7 @@ else {
 $ServerBuild = "./Server/project/build"
 $ModulesBuild = "./Modules/project/Build"
 $LauncherBuild = "./Launcher/project/Build"
+$CSharpServerBuild = "./server-csharp/Build"
 
 $PackagerSouceZipLink = "https://github.com/sp-tarkov/build/archive/refs/heads/main.zip"
 $OutputFolder = "./output"
@@ -59,9 +63,16 @@ if (Test-Path -Path $OutputFolder) {
 
 if ($NeedBuild) {
     # build server
-    Write-Output "Building SPT Server"
-    pwsh ./build_server.ps1 $OverwriteFlag -Branch $ServerBranch -NoZip -Release
-    Get-ChildItem "$ServerBuild"
+    if (!$IsV4) {
+        Write-Output "Building SPT Node Server"
+        pwsh ./build_server.ps1 $OverwriteFlag -Branch $ServerBranch -NoZip -Release
+        Get-ChildItem "$ServerBuild"
+    }
+    else {
+        Write-Output "Building SPT .NET Server"
+        pwsh ./build_server_csharp.ps1 $OverwriteFlag -Branch $ServerBranch -NoZip -Release -SelfContained
+        Get-ChildItem "$ServerBuild"
+    }
 
     # build modules
     Write-Output "Building SPT Modules"
@@ -75,12 +86,7 @@ if ($NeedBuild) {
     Get-ChildItem "$LauncherBuild"
 }
 
-$SPTMeta = (Get-Content "$ServerBuild/SPT_Data/Server/configs/core.json" | ConvertFrom-Json -AsHashtable)
-Write-Output $SPTMeta
-$SPTCompatVersion = $SPTmeta.compatibleTarkovVersion
-$SPTVersion = $SPTmeta.sptVersion
-
-# Add extra files
+# Extra files
 Invoke-WebRequest -Uri "$PackagerSouceZipLink" -OutFile "./packager.zip"
 if (Test-Path -Path "./PackagerFiles") {
     Remove-Item -Recurse -Force "./PackagerFiles"
@@ -88,10 +94,26 @@ if (Test-Path -Path "./PackagerFiles") {
 Expand-Archive -Path "./packager.zip" -DestinationPath "./PackagerFiles"
 Copy-Item -Recurse -Force -Path "./PackagerFiles/build-main/static-assets/" -Destination "$OutputFolder"
 
+if (!$IsV4) {
+    $SPTMetaFile = "$ServerBuild/SPT_Data/Server/configs/core.json"
+}
+else {
+    $SPTMetaFile = "$CSharpServerBuild/Assets/configs/core.json"
+}
+$SPTMeta = (Get-Content "$SPTMetaFile" | ConvertFrom-Json -AsHashtable)
+Write-Output $SPTMeta
+$SPTCompatVersion = $SPTmeta.compatibleTarkovVersion
+$SPTVersion = $SPTmeta.sptVersion
+
 Write-Output "Copying SPT projects"
-Copy-Item -Recurse -Force -Path "$LauncherBuild/*" -Destination "$OutputFolder"
-Copy-Item -Recurse -Force -Path "$ServerBuild/*" -Destination "$OutputFolder"
+if (!$IsV4) {
+    Copy-Item -Recurse -Force -Path "$ServerBuild/*" -Destination "$OutputFolder"
+}
+else {
+    Copy-Item -Recurse -Force -Path "$CSharpServerBuild/*" -Destination "$OutputFolder/SPTarkov.Server/"
+}
 Copy-Item -Recurse -Force -Path "$ModulesBuild/*" -Destination "$OutputFolder"
+Copy-Item -Recurse -Force -Path "$LauncherBuild/*" -Destination "$OutputFolder"
 
 $ZipName = "SPT-$SPTVersion-$SPTCompatVersion-$(Get-Date -Format "yyyyMMdd")"
 Get-ChildItem "$OutputFolder"

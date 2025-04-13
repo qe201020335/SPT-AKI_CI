@@ -1,4 +1,4 @@
-name: Build SPT CSharp Server
+name: Build SPT .NET Server
 
 on:
   push:
