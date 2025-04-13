@@ -61,6 +61,8 @@ if (Test-Path -Path $OutputFolder) {
     }
 }
 
+New-Item -Path "$OutputFolder" -ItemType "Directory"
+
 if ($NeedBuild) {
     # build server
     if (!$IsV4) {
@@ -92,7 +94,7 @@ if (Test-Path -Path "./PackagerFiles") {
     Remove-Item -Recurse -Force "./PackagerFiles"
 }
 Expand-Archive -Path "./packager.zip" -DestinationPath "./PackagerFiles"
-Copy-Item -Recurse -Force -Path "./PackagerFiles/build-main/static-assets/" -Destination "$OutputFolder"
+Copy-Item -Recurse -Force -Path "./PackagerFiles/build-main/static-assets/*" -Destination "$OutputFolder"
 
 if (!$IsV4) {
     $SPTMetaFile = "$ServerBuild/SPT_Data/Server/configs/core.json"
@@ -110,7 +112,8 @@ if (!$IsV4) {
     Copy-Item -Recurse -Force -Path "$ServerBuild/*" -Destination "$OutputFolder"
 }
 else {
-    Copy-Item -Recurse -Force -Path "$CSharpServerBuild/*" -Destination "$OutputFolder/SPTarkov.Server/"
+    New-Item -Path "$OutputFolder/SPTarkov.Server" -ItemType "Directory"
+    Copy-Item -Recurse -Force -Path "$CSharpServerBuild/*" -Destination "$OutputFolder/SPTarkov.Server"
 }
 Copy-Item -Recurse -Force -Path "$ModulesBuild/*" -Destination "$OutputFolder"
 Copy-Item -Recurse -Force -Path "$LauncherBuild/*" -Destination "$OutputFolder"
