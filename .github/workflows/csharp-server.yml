@@ -9,7 +9,7 @@ on:
       - '.github/workflows/csharp-server.yml'
   pull_request:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 5 * * *'
   workflow_dispatch:
 
 jobs:
