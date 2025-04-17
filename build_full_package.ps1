@@ -72,7 +72,7 @@ if ($NeedBuild) {
     }
     else {
         Write-Output "Building SPT .NET Server"
-        pwsh ./build_server_csharp.ps1 $OverwriteFlag -Branch $ServerBranch -NoZip -Release -SelfContained
+        pwsh ./build_server_csharp.ps1 $OverwriteFlag -Branch $ServerBranch -NoZip -Release -SelfContained -SingleFile
         Get-ChildItem "$ServerBuild"
     }
 

@@ -18,6 +18,9 @@ Param(
     [Switch] $SelfContained,
 
     [Parameter(Mandatory = $false)]
+    [Switch] $SingleFile,
+
+    [Parameter(Mandatory = $false)]
     [string] $Runtime
 )
 
@@ -93,8 +96,16 @@ else {
     $SCFlag = ""
 }
 
-Write-Output "dotnet publish -c $Configuration -r $Runtime $SCFlag -o ./Build ./SPTarkov.Server"
-dotnet publish -c $Configuration -r $Runtime $SCFlag -o ./Build ./SPTarkov.Server
+if ($SingleFile) {
+    $SFFlag = "PublishSingleFile=true"
+    $Suffix = "$Suffix-single"
+}
+else {
+    $SFFlag = "PublishSingleFile=false"
+}
+
+Write-Output "dotnet publish -c $Configuration -r $Runtime $SCFlag -p $SFFlag -o ./Build ./SPTarkov.Server"
+dotnet publish -c $Configuration -r $Runtime $SCFlag -p $SFFlag -o ./Build ./SPTarkov.Server
 
 if ($LASTEXITCODE -ne 0) {
     throw ("dotnet publish failed, exit code $LASTEXITCODE")

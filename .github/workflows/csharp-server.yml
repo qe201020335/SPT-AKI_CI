@@ -41,6 +41,7 @@ jobs:
         arch: ["x64", "arm64"]
         dbg: ["", "-Release"]
         sc: ["", "-SelfContained"]
+        sf: ["", "-SingleFile"]
     
     runs-on: "windows-latest"
     
@@ -54,7 +55,7 @@ jobs:
       - name: Build SPTarkov.Server
         id: build
         shell: pwsh
-        run: ./build_server_csharp.ps1 -Overwrite -Branch ${{matrix.b.branch}} ${{matrix.dbg}} ${{matrix.sc}} -Runtime ${{matrix.r.plat}}-${{matrix.arch}} ${{matrix.r.zflag}}
+        run: ./build_server_csharp.ps1 -Overwrite -Branch ${{matrix.b.branch}} ${{matrix.dbg}} ${{matrix.sc}} ${{matrix.sf}} -Runtime ${{matrix.r.plat}}-${{matrix.arch}} ${{matrix.r.zflag}}
 
       - uses: actions/upload-artifact@v4
         if: ${{! matrix.r.zip}}
