@@ -24,7 +24,7 @@ jobs:
               sbranch: "develop",
               lbranch: "4.0.0-DEV",
               mbranch: "4.0.x-dev",
-              version: "0.16.5.6.36217",
+              version: "0.16.6.0.36679",
               v4: true,
               v4Flag: "-IsV4"
             },
