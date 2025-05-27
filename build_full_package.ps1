@@ -72,7 +72,7 @@ if ($NeedBuild) {
     }
     else {
         Write-Output "Building SPT .NET Server"
-        pwsh ./build_server_csharp.ps1 $OverwriteFlag -Branch $ServerBranch -NoZip -Release -SelfContained -SingleFile
+        pwsh ./build_server_csharp.ps1 $OverwriteFlag -Branch $ServerBranch -NoZip -Release -SingleFile
         Get-ChildItem "$ServerBuild"
     }
 
@@ -112,8 +112,7 @@ if (!$IsV4) {
     Copy-Item -Recurse -Force -Path "$ServerBuild/*" -Destination "$OutputFolder"
 }
 else {
-    New-Item -Path "$OutputFolder/SPTarkov.Server" -ItemType "Directory"
-    Copy-Item -Recurse -Force -Path "$CSharpServerBuild/*" -Destination "$OutputFolder/SPTarkov.Server"
+    Copy-Item -Recurse -Force -Path "$CSharpServerBuild/*" -Destination "$OutputFolder"
 }
 Copy-Item -Recurse -Force -Path "$ModulesBuild/*" -Destination "$OutputFolder"
 Copy-Item -Recurse -Force -Path "$LauncherBuild/*" -Destination "$OutputFolder"
