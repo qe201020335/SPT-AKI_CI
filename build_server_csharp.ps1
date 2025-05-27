@@ -73,6 +73,14 @@ Write-Output "lfs"
 git lfs fetch
 git lfs pull
 
+$SPTMeta = (Get-Content ./Libraries/SPTarkov.Server.Assets/Assets/configs/core.json | ConvertFrom-Json -AsHashtable)
+Write-Output $SPTMeta
+
+$SPTVersion = $SPTmeta.sptVersion
+$EFTVersion = $SPTmeta.compatibleTarkovVersion
+
+Write-Output "Building SPT Server $SPTVersion compatible with $EFTVersion"
+
 Write-Output "build"
 if ($Release) {
     $Configuration = "Release"
@@ -89,11 +97,11 @@ if ($Runtime.Length -eq 0) {
 $Suffix = "$Configuration-$Runtime"
 
 if ($SelfContained) {
-    $SCFlag = "--sc"
+    $SCFlag = "--self-contained"
     $Suffix = "$Suffix-selfcontained"
 }
 else {
-    $SCFlag = ""
+    $SCFlag = "--no-self-contained"
 }
 
 if ($SingleFile) {
@@ -104,16 +112,16 @@ else {
     $SFFlag = "PublishSingleFile=false"
 }
 
-Write-Output "dotnet publish -c $Configuration -r $Runtime $SCFlag -p $SFFlag -o ./Build ./SPTarkov.Server"
-dotnet publish -c $Configuration -r $Runtime $SCFlag -p $SFFlag -o ./Build ./SPTarkov.Server
+$BuildTime = Get-Date -Format yyyyMMdd
+
+Write-Output "dotnet publish ./SPTarkov.Server -f net9.0 -o ./Build -c $Configuration -r $Runtime $SCFlag -p $SFFlag -p:IncludeNativeLibrariesForSelfExtract=true -p:SptBuildType=RELEASE -p:SptVersion=$SPTVersion -p:SptBuildTime=$BuildTime -p:SptCommit=$Head"
+dotnet publish ./SPTarkov.Server -f net9.0 -o ./Build -c $Configuration -r $Runtime $SCFlag -p $SFFlag -p:IncludeNativeLibrariesForSelfExtract=true -p:SptBuildType=RELEASE -p:SptVersion=$SPTVersion -p:SptBuildTime=$BuildTime -p:SptCommit=$Head | Out-Null 
 
 if ($LASTEXITCODE -ne 0) {
     throw ("dotnet publish failed, exit code $LASTEXITCODE")
 }
 
 Get-ChildItem ./Build
-$SPTMeta = (Get-Content ./Build/Assets/configs/core.json | ConvertFrom-Json -AsHashtable)
-Write-Output $SPTMeta
 
 if ($BuildOnCommit) {
     $CInfo = "$Head-$CTimeS"
@@ -123,7 +131,7 @@ else {
 }
 
 Write-Output $Suffix
-$Suffix = "$Suffix-v$($SPTmeta.sptVersion)-$CInfo-Tarkov$($SPTmeta.compatibleTarkovVersion)"
+$Suffix = "$Suffix-v$SPTVersion-$CInfo-Tarkov$EFTVersion"
 $ZipName = "SPTarkov.Server-$Suffix"
 Write-Output $ZipName
 
