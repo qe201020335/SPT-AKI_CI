@@ -94,7 +94,16 @@ if (Test-Path -Path "./PackagerFiles") {
     Remove-Item -Recurse -Force "./PackagerFiles"
 }
 Expand-Archive -Path "./packager.zip" -DestinationPath "./PackagerFiles"
-Copy-Item -Recurse -Force -Path "./PackagerFiles/build-main/static-assets/*" -Destination "$OutputFolder"
+
+if ($IsV4)
+{
+    $StaticAssetsPath = "PackagerFiles/build-main/static-assets-csharp"
+}
+else {
+    $StaticAssetsPath = "PackagerFiles/build-main/static-assets"
+}
+
+Copy-Item -Recurse -Force -Path "./$StaticAssetsPath/*" -Destination "$OutputFolder"
 
 if (!$IsV4) {
     $SPTMetaFile = "$ServerBuild/SPT_Data/Server/configs/core.json"
