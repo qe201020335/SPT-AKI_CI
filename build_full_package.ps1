@@ -103,7 +103,7 @@ else {
     $StaticAssetsPath = "PackagerFiles/build-main/static-assets"
 }
 
-Copy-Item -Recurse -Force -Path "./$StaticAssetsPath/*" -Destination "$OutputFolder"
+Copy-Item -Recurse -Force -Path "./$StaticAssetsPath/**" -Destination "$OutputFolder"
 
 if (!$IsV4) {
     $SPTMetaFile = "$ServerBuild/SPT_Data/Server/configs/core.json"
@@ -118,13 +118,13 @@ $SPTVersion = $SPTmeta.sptVersion
 
 Write-Output "Copying SPT projects"
 if (!$IsV4) {
-    Copy-Item -Recurse -Force -Path "$ServerBuild/*" -Destination "$OutputFolder"
+    Copy-Item -Recurse -Force -Path "$ServerBuild/**" -Destination "$OutputFolder"
 }
 else {
-    Copy-Item -Recurse -Force -Path "$CSharpServerBuild/*" -Destination "$OutputFolder"
+    Copy-Item -Recurse -Force -Path "$CSharpServerBuild/**" -Destination "$OutputFolder"
 }
-Copy-Item -Recurse -Force -Path "$ModulesBuild/*" -Destination "$OutputFolder"
-Copy-Item -Recurse -Force -Path "$LauncherBuild/*" -Destination "$OutputFolder"
+Copy-Item -Recurse -Force -Path "$ModulesBuild/**" -Destination "$OutputFolder"
+Copy-Item -Recurse -Force -Path "$LauncherBuild/**" -Destination "$OutputFolder"
 
 $ZipName = "SPT-$SPTVersion-$SPTCompatVersion-$(Get-Date -Format "yyyyMMdd")"
 Get-ChildItem "$OutputFolder"
