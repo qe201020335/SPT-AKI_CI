@@ -62,6 +62,7 @@ jobs:
         with:
           name: ${{ steps.build.outputs.ZIP_NAME }}
           path: './server-csharp/Build/*'
+          include-hidden-files: true
           if-no-files-found: error
           retention-days: 3
           compression-level: 9      
@@ -71,6 +72,7 @@ jobs:
         with:
           name: ${{ steps.build.outputs.ZIP_NAME }}
           path: './server-csharp/${{ steps.build.outputs.ZIP_NAME }}'
+          include-hidden-files: true
           if-no-files-found: error
           retention-days: 3
           compression-level: 0

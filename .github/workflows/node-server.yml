@@ -63,6 +63,7 @@ jobs:
         with:
           name: ${{ steps.build.outputs.ZIP_NAME }}
           path: './Server/project/build/*'
+          include-hidden-files: true
           if-no-files-found: error
           retention-days: 3
           compression-level: 9      
@@ -72,6 +73,7 @@ jobs:
         with:
           name: ${{ steps.build.outputs.ZIP_NAME }}
           path: './Server/${{ steps.build.outputs.ZIP_NAME }}'
+          include-hidden-files: true
           if-no-files-found: error
           retention-days: 3
           compression-level: 0

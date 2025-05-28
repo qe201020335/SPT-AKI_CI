@@ -84,6 +84,7 @@ jobs:
         with:
           name: ${{ steps.build_node_server.outputs.ZIP_NAME }}
           path: './Server/project/build/*'
+          include-hidden-files: true
           if-no-files-found: error
           retention-days: 3
           compression-level: 9
@@ -93,6 +94,7 @@ jobs:
         with:
           name: ${{ steps.build_csharp_server.outputs.ZIP_NAME }}
           path: './server-csharp/Build/*'
+          include-hidden-files: true
           if-no-files-found: error
           retention-days: 3
           compression-level: 9
@@ -101,6 +103,7 @@ jobs:
         with:
           name: ${{ steps.build_modules.outputs.ZIP_NAME }}
           path: './Modules/project/Build/*'
+          include-hidden-files: true
           if-no-files-found: error
           retention-days: 3
           compression-level: 9
@@ -109,6 +112,7 @@ jobs:
         with:
           name: ${{ steps.build_package.outputs.ZIP_NAME }}
           path: "./output/*"
+          include-hidden-files: true
           if-no-files-found: error
           retention-days: 3
           compression-level: 9
