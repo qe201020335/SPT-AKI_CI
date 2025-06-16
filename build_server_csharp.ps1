@@ -15,9 +15,6 @@ Param(
     [Switch] $Release,
 
     [Parameter(Mandatory = $false)]
-    [Switch] $SelfContained,
-
-    [Parameter(Mandatory = $false)]
     [Switch] $SingleFile,
 
     [Parameter(Mandatory = $false)]
@@ -73,7 +70,7 @@ Write-Output "lfs"
 git lfs fetch
 git lfs pull
 
-$SPTMeta = (Get-Content ./Libraries/SPTarkov.Server.Assets/Assets/configs/core.json | ConvertFrom-Json -AsHashtable)
+$SPTMeta = (Get-Content ./Libraries/SPTarkov.Server.Assets/SPT_Data/configs/core.json | ConvertFrom-Json -AsHashtable)
 Write-Output $SPTMeta
 
 $SPTVersion = $SPTmeta.sptVersion
@@ -90,19 +87,11 @@ else {
 }
 
 if ($Runtime.Length -eq 0) {
-    $Runtime = ((dotnet --info | findstr "RID:") -split ":")[1].Trim()
+    $Runtime = ((dotnet --info | Select-String -Pattern "RID:") -split ":")[1].Trim()
     Write-Output "USing current runtime (RID): $Runtime"
 }
 
 $Suffix = "$Configuration-$Runtime"
-
-if ($SelfContained) {
-    $SCFlag = "--self-contained"
-    $Suffix = "$Suffix-selfcontained"
-}
-else {
-    $SCFlag = "--no-self-contained"
-}
 
 if ($SingleFile) {
     $SFFlag = "PublishSingleFile=true"
@@ -114,8 +103,8 @@ else {
 
 $BuildTime = Get-Date -Format yyyyMMdd
 
-Write-Output "dotnet publish ./SPTarkov.Server -f net9.0 -o ./Build -c $Configuration -r $Runtime $SCFlag -p $SFFlag -p:IncludeNativeLibrariesForSelfExtract=true -p:SptBuildType=RELEASE -p:SptVersion=$SPTVersion -p:SptBuildTime=$BuildTime -p:SptCommit=$Head"
-dotnet publish ./SPTarkov.Server -f net9.0 -o ./Build -c $Configuration -r $Runtime $SCFlag -p $SFFlag -p:IncludeNativeLibrariesForSelfExtract=true -p:SptBuildType=RELEASE -p:SptVersion=$SPTVersion -p:SptBuildTime=$BuildTime -p:SptCommit=$Head | Out-Null 
+Write-Output "dotnet publish ./SPTarkov.Server/SPTarkov.Server.csproj -f net9.0 -o ./Build -c $Configuration -r $Runtime $SCFlag -p $SFFlag -p:IncludeNativeLibrariesForSelfExtract=true -p:SptBuildType=RELEASE -p:SptVersion=$SPTVersion -p:SptBuildTime=$BuildTime -p:SptCommit=$Head -p:IsPublish=true"
+dotnet publish ./SPTarkov.Server/SPTarkov.Server.csproj -f net9.0 -o ./Build -c $Configuration -r $Runtime $SCFlag -p $SFFlag -p:IncludeNativeLibrariesForSelfExtract=true -p:SptBuildType=RELEASE -p:SptVersion=$SPTVersion -p:SptBuildTime=$BuildTime -p:SptCommit=$Head -p:IsPublish=true
 
 if ($LASTEXITCODE -ne 0) {
     throw ("dotnet publish failed, exit code $LASTEXITCODE")

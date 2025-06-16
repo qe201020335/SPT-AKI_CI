@@ -109,7 +109,7 @@ if (!$IsV4) {
     $SPTMetaFile = "$ServerBuild/SPT_Data/Server/configs/core.json"
 }
 else {
-    $SPTMetaFile = "$CSharpServerBuild/Assets/configs/core.json"
+    $SPTMetaFile = "$CSharpServerBuild/SPT_Data/configs/core.json"
 }
 $SPTMeta = (Get-Content "$SPTMetaFile" | ConvertFrom-Json -AsHashtable)
 Write-Output $SPTMeta

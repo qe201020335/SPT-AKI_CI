@@ -74,7 +74,6 @@ pwsh ./build_server.ps1 -Release -Branch 3.7.5
 | `-Branch`        | no        | The branch or tag to build on                                                                                                                |
 | `-Commit`        | no        | The exact commit to build, doesn't matter which branch it is                                                                                 |
 | `-Runtime`       | no        | The target runtime to build for, such as `win-x64`, `linux-arm64`. See [.NET RID](https://learn.microsoft.com/en-us/dotnet/core/rid-catalog) |
-| `-SelfContained` | no        | If present, output build will have .NET runtime bundled                                                                                      |
 | `-Overwrite`     | no        | If present, will delete existing source folder without asking                                                                                |
 | `-Release`       | no        | If present, will make a release build instead of debug                                                                                       |
 | `-NoZip`         | no        | If present, will not compress the output to an archive                                                                                       |

@@ -89,10 +89,10 @@ else {
 
 $ZipName = "SPT-Modules-$CInfo-Tarkov$TarkovVersion"
 
-Get-ChildItem ./build
+Get-ChildItem ./Build
 if (!$NoZip) {
     $ZipName = "$ZipName.zip"
-    Compress-Archive -Path ./build/* -DestinationPath "../$ZipName" -Force
+    Compress-Archive -Path ./Build/* -DestinationPath "../$ZipName" -Force
     Write-Output "Built file: $ZipName"
 }
 
