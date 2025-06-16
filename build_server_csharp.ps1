@@ -103,8 +103,8 @@ else {
 
 $BuildTime = Get-Date -Format yyyyMMdd
 
-Write-Output "dotnet publish ./SPTarkov.Server/SPTarkov.Server.csproj -f net9.0 -o ./Build -c $Configuration -r $Runtime $SCFlag -p $SFFlag -p:IncludeNativeLibrariesForSelfExtract=true -p:SptBuildType=RELEASE -p:SptVersion=$SPTVersion -p:SptBuildTime=$BuildTime -p:SptCommit=$Head -p:IsPublish=true"
-dotnet publish ./SPTarkov.Server/SPTarkov.Server.csproj -f net9.0 -o ./Build -c $Configuration -r $Runtime $SCFlag -p $SFFlag -p:IncludeNativeLibrariesForSelfExtract=true -p:SptBuildType=RELEASE -p:SptVersion=$SPTVersion -p:SptBuildTime=$BuildTime -p:SptCommit=$Head -p:IsPublish=true
+Write-Output "dotnet publish ./SPTarkov.Server/SPTarkov.Server.csproj -f net9.0 -o ./Build -c $Configuration -r $Runtime --self-contained false -p $SFFlag -p:IncludeNativeLibrariesForSelfExtract=true -p:SptBuildType=RELEASE -p:SptVersion=$SPTVersion -p:SptBuildTime=$BuildTime -p:SptCommit=$Head -p:IsPublish=true"
+dotnet publish ./SPTarkov.Server/SPTarkov.Server.csproj -f net9.0 -o ./Build -c $Configuration -r $Runtime --self-contained false -p $SFFlag -p:IncludeNativeLibrariesForSelfExtract=true -p:SptBuildType=RELEASE -p:SptVersion=$SPTVersion -p:SptBuildTime=$BuildTime -p:SptCommit=$Head -p:IsPublish=true
 
 if ($LASTEXITCODE -ne 0) {
     throw ("dotnet publish failed, exit code $LASTEXITCODE")
