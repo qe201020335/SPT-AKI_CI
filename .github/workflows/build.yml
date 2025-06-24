@@ -25,19 +25,19 @@ jobs:
               sbranch: "develop",
               lbranch: "4.0.0-DEV",
               mbranch: "4.0.x-dev",
-              version: "0.16.6.0.36679",
+              version: "0.16.7.0.37711",
               v4: true,
               v4Flag: "-IsV4"
-            },
-            {
-              os: "windows-latest",
-              sbranch: "3.11.x-dev",
-              lbranch: "3.11.x-dev",
-              mbranch: "3.11.x-dev",
-              version: "0.16.1.3.35392",
-              v4: false,
-              v4Flag: ""
             }
+            # {
+            #   os: "windows-latest",
+            #   sbranch: "3.11.x-dev",
+            #   lbranch: "3.11.x-dev",
+            #   mbranch: "3.11.x-dev",
+            #   version: "0.16.1.3.35392",
+            #   v4: false,
+            #   v4Flag: ""
+            # }
           ]
 
     runs-on: ${{matrix.versions.os}}
