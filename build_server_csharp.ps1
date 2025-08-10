@@ -73,7 +73,7 @@ git lfs pull
 $SPTMeta = (Get-Content ./Libraries/SPTarkov.Server.Assets/SPT_Data/configs/core.json | ConvertFrom-Json -AsHashtable)
 Write-Output $SPTMeta
 
-$SPTVersion = $SPTmeta.sptVersion
+$SPTVersion = (Select-Xml -Path .\Build.props '//SptVersion').Node.InnerText  # $SPTmeta.sptVersion
 $EFTVersion = $SPTmeta.compatibleTarkovVersion
 
 Write-Output "Building SPT Server $SPTVersion compatible with $EFTVersion"
@@ -81,9 +81,11 @@ Write-Output "Building SPT Server $SPTVersion compatible with $EFTVersion"
 Write-Output "build"
 if ($Release) {
     $Configuration = "Release"
+    $SptBuildType = "RELEASE"
 }
 else {
     $Configuration = "Debug"
+    $SptBuildType = "DEBUG"
 }
 
 if ($Runtime.Length -eq 0) {
@@ -103,8 +105,8 @@ else {
 
 $BuildTime = Get-Date -Format yyyyMMdd
 
-Write-Output "dotnet publish ./SPTarkov.Server/SPTarkov.Server.csproj -f net9.0 -o ./Build -c $Configuration -r $Runtime --self-contained false -p $SFFlag -p:IncludeNativeLibrariesForSelfExtract=true -p:SptBuildType=RELEASE -p:SptVersion=$SPTVersion -p:SptBuildTime=$BuildTime -p:SptCommit=$Head -p:IsPublish=true"
-dotnet publish ./SPTarkov.Server/SPTarkov.Server.csproj -f net9.0 -o ./Build -c $Configuration -r $Runtime --self-contained false -p $SFFlag -p:IncludeNativeLibrariesForSelfExtract=true -p:SptBuildType=RELEASE -p:SptVersion=$SPTVersion -p:SptBuildTime=$BuildTime -p:SptCommit=$Head -p:IsPublish=true
+Write-Output "dotnet publish --property WarningLevel=0 ./SPTarkov.Server/SPTarkov.Server.csproj -f net9.0 -o ./Build -c $Configuration -r $Runtime --self-contained false -p $SFFlag -p:IncludeNativeLibrariesForSelfExtract=true -p:SptBuildType=$SptBuildType -p:SptVersion=$SPTVersion -p:SptBuildTime=$BuildTime -p:SptCommit=$Head -p:IsPublish=true"
+dotnet publish --property WarningLevel=0 ./SPTarkov.Server/SPTarkov.Server.csproj -f net9.0 -o ./Build -c $Configuration -r $Runtime --self-contained false -p $SFFlag -p:IncludeNativeLibrariesForSelfExtract=true -p:SptBuildType=$SptBuildType -p:SptVersion=$SPTVersion -p:SptBuildTime=$BuildTime -p:SptCommit=$Head -p:IsPublish=true
 
 if ($LASTEXITCODE -ne 0) {
     throw ("dotnet publish failed, exit code $LASTEXITCODE")
