@@ -90,7 +90,7 @@ else {
 
 if ($Runtime.Length -eq 0) {
     $Runtime = ((dotnet --info | Select-String -Pattern "RID:") -split ":")[1].Trim()
-    Write-Output "USing current runtime (RID): $Runtime"
+    Write-Output "Using current runtime (RID): $Runtime"
 }
 
 $Suffix = "$Configuration-$Runtime"
