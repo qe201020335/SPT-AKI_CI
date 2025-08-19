@@ -32,19 +32,30 @@ jobs:
         os: 
           [
             {
-              os: "windows-latest",
+              runs-on: "ubuntu-latest",
+              os: "win32",
+              arch: "x64",
               flags: "-NoZip",
               zip: false
             },
             {
-              os: "ubuntu-latest",
+              runs-on: "ubuntu-latest",
+              os: "linux",
+              arch: "x64",
+              flags: "",
+              zip: true
+            },
+            {
+              runs-on: "ubuntu-24.04-arm",
+              os: "linux",
+              arch: "arm64",
               flags: "",
               zip: true
             }
           ]
         dbg: ["", "-Release"]
     
-    runs-on: ${{matrix.os.os}}
+    runs-on: ${{matrix.os.runs-on}}
     
     steps:
       - uses: actions/checkout@v4
@@ -56,7 +67,7 @@ jobs:
       - name: Build SPT Server
         id: build
         shell: pwsh
-        run: ./build_server.ps1 -Overwrite -Branch ${{matrix.m.branch}} ${{matrix.dbg}} ${{matrix.os.flags}}
+        run: ./build_server.ps1 -Overwrite -Branch ${{matrix.m.branch}} -Os ${{matrix.os.os}} -Arch ${{matrix.os.arm64}} ${{matrix.dbg}} ${{matrix.os.flags}}
 
       - uses: actions/upload-artifact@v4
         if: ${{! matrix.os.zip}}

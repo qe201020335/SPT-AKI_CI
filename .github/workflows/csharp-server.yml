@@ -38,9 +38,9 @@ jobs:
               zip: true
             }
           ]
-        arch: ["x64"]
+        arch: ["x64", "arm64"]
         dbg: ["-Release"]
-        sf: ["", "-SingleFile"]
+        sf: ["-SingleFile"]
     
     runs-on: "ubuntu-latest"
     

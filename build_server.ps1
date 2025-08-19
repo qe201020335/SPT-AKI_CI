@@ -6,6 +6,12 @@ Param(
     [Switch] $Release,
 
     [Parameter(Mandatory = $false)]
+    [string] $Os,
+
+    [Parameter(Mandatory = $false)]
+    [string] $Arch,
+
+    [Parameter(Mandatory = $false)]
     [string] $Branch,
 
     [Parameter(Mandatory = $false)]
@@ -20,6 +26,26 @@ $SOURCE_REPO = "https://github.com/sp-tarkov/server.git"
 $SERVER_DIR = "./Server"
 
 $BuildOnCommit = $Commit.Length -gt 0
+
+if (($Os.Length -gt 0) -xor ($Arch.Length -gt 0)) {
+    Write-Output "-Os and -Arch must be both provided to specify target platform or both empty to use platform defaults"
+    Exit 1
+}
+
+$ArchFromNode = node -e 'console.log(process.arch)'
+if ($Arch.Length -gt 0) {
+    if ($Arch -ne $ArchFromNode) {
+        Write-Output "Cannot build $Arch executable with $ArchFromNode Node due to a limitation of pkg. The ouput executable will not run."
+        Write-Output "See https://github.com/yao-pkg/pkg?tab=readme-ov-file#targets"
+        Exit 1
+    }
+}
+else {
+    $Os = node -e 'console.log(process.platform)'
+    $Arch = $ArchFromNode
+}
+
+Write-Output "Building for platform: $Os-$Arch"
 
 if (Test-Path -Path $SERVER_DIR) {
     if ($Overwrite -or (Read-Host "$SERVER_DIR exists, delete? [y/n]") -eq 'y') {
@@ -73,7 +99,7 @@ else {
 Set-Location ./project
 
 npm install --force
-npm run build:$Target *>&1
+npm run build:$Target -- --platform $Os --arch $Arch *>&1
 
 if ($LASTEXITCODE -ne 0) {
     throw ("npm run build:$Target failed, exit code $LASTEXITCODE")
@@ -92,14 +118,7 @@ else {
 
 $Suffix = "$Target-v$($SPTmeta.sptVersion)-$CInfo-Tarkov$($SPTmeta.compatibleTarkovVersion)"
 
-if ($IsWindows) {
-    $Os = "win"
-}
-else{
-    $Os = "linux"
-}
-
-$ZipName = "SPT-Server-$Os-$Suffix"
+$ZipName = "SPT-Server-$Os-$Arch-$Suffix"
 
 if (!$NoZip) {
     if ($IsWindows) {

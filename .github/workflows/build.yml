@@ -21,7 +21,6 @@ jobs:
         versions:
           [
             {
-              os: "ubuntu-latest",
               sbranch: "develop",
               lbranch: "4.0.0-DEV",
               mbranch: "4.0.x-dev",
@@ -30,7 +29,6 @@ jobs:
               v4Flag: "-IsV4"
             }
             # {
-            #   os: "windows-latest",
             #   sbranch: "3.11.x-dev",
             #   lbranch: "3.11.x-dev",
             #   mbranch: "3.11.x-dev",
@@ -40,7 +38,7 @@ jobs:
             # }
           ]
 
-    runs-on: ${{matrix.versions.os}}
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4

@@ -67,12 +67,18 @@ if ($NeedBuild) {
     # build server
     if (!$IsV4) {
         Write-Output "Building SPT Node Server"
-        pwsh ./build_server.ps1 $OverwriteFlag -Branch $ServerBranch -NoZip -Release
+        pwsh ./build_server.ps1 $OverwriteFlag -Branch $ServerBranch -Os win32 -Arch x64 -NoZip -Release
+        if ($LASTEXITCODE -ne 0) {
+            Exit $LASTEXITCODE
+        }
         Get-ChildItem "$ServerBuild"
     }
     else {
         Write-Output "Building SPT .NET Server"
         pwsh ./build_server_csharp.ps1 $OverwriteFlag -Branch $ServerBranch -Runtime win-x64 -NoZip -Release -SingleFile
+        if ($LASTEXITCODE -ne 0) {
+            Exit $LASTEXITCODE
+        }
         Get-ChildItem "$ServerBuild"
     }
 
@@ -80,11 +86,17 @@ if ($NeedBuild) {
     Write-Output "Building SPT Modules"
     Write-Output "Using SPT server compatible tarkov version: $TarkovVersion"
     pwsh ./build_modules.ps1 $OverwriteFlag -Branch $ModulesBranch -Url $Url -TarkovVersion $TarkovVersion -NoZip
+    if ($LASTEXITCODE -ne 0) {
+        Exit $LASTEXITCODE
+    }
     Get-ChildItem "$ModulesBuild/BepInEx/plugins/spt"
 
     # build launcher
     Write-Output "Building SPT Launcher"
     pwsh ./build_launcher.ps1 $OverwriteFlag -Branch $LauncherBranch
+    if ($LASTEXITCODE -ne 0) {
+        Exit $LASTEXITCODE
+    }
     Get-ChildItem "$LauncherBuild"
 }
 
