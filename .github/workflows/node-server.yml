@@ -67,7 +67,7 @@ jobs:
       - name: Build SPT Server
         id: build
         shell: pwsh
-        run: ./build_server.ps1 -Overwrite -Branch ${{matrix.m.branch}} -Os ${{matrix.os.os}} -Arch ${{matrix.os.arm64}} ${{matrix.dbg}} ${{matrix.os.flags}}
+        run: ./build_server.ps1 -Overwrite -Branch ${{matrix.m.branch}} -Os ${{matrix.os.os}} -Arch ${{matrix.os.arch}} ${{matrix.dbg}} ${{matrix.os.flags}}
 
       - uses: actions/upload-artifact@v4
         if: ${{! matrix.os.zip}}
