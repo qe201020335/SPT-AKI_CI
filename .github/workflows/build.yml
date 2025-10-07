@@ -62,7 +62,7 @@ jobs:
         id: build_csharp_server
         if: ${{matrix.versions.v4}}
         shell: pwsh
-        run: ./build_server_csharp.ps1 -Overwrite -NoZip -Branch ${{ matrix.versions.sbranch }} -Runtime win-x64 -Release -SingleFile
+        run: ./build_server_csharp.ps1 -Overwrite -NoZip -Branch ${{ matrix.versions.sbranch }} -Runtime win-x64 -Release
 
       - name: Build SPT Modules
         id: build_modules
