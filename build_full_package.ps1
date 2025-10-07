@@ -75,11 +75,11 @@ if ($NeedBuild) {
     }
     else {
         Write-Output "Building SPT .NET Server"
-        pwsh ./build_server_csharp.ps1 $OverwriteFlag -Branch $ServerBranch -Runtime win-x64 -NoZip -Release -SingleFile
+        pwsh ./build_server_csharp.ps1 $OverwriteFlag -Branch $ServerBranch -Runtime win-x64 -NoZip -Release
         if ($LASTEXITCODE -ne 0) {
             Exit $LASTEXITCODE
         }
-        Get-ChildItem "$ServerBuild"
+        Get-ChildItem "$CSharpServerBuild"
     }
 
     # build modules
@@ -126,20 +126,30 @@ else {
 $SPTMeta = (Get-Content "$SPTMetaFile" | ConvertFrom-Json -AsHashtable)
 Write-Output $SPTMeta
 $SPTCompatVersion = $SPTmeta.compatibleTarkovVersion
-$SPTVersion = $SPTmeta.sptVersion
+
+if (!$IsV4) {
+    $SPTVersion = $SPTmeta.sptVersion
+}
+else {
+    $SPTVersion = (Select-Xml -Path "./server-csharp/Build.props" '//SptVersion').Node.InnerText
+}
 
 Write-Output "Copying SPT projects"
 if (!$IsV4) {
     Copy-Item -Recurse -Force -Path "$ServerBuild/*" -Destination "$OutputFolder"
+    Copy-Item -Recurse -Force -Path "$LauncherBuild/*" -Destination "$OutputFolder"
 }
 else {
-    Copy-Item -Recurse -Force -Path "$CSharpServerBuild/*" -Destination "$OutputFolder"
+    New-Item -Path "$OutputFolder/SPT" -ItemType Directory
+    Copy-Item -Recurse -Force -Path "$CSharpServerBuild/*" -Destination "$OutputFolder/SPT"
+    Copy-Item -Recurse -Force -Path "$LauncherBuild/*" -Destination "$OutputFolder/SPT"
 }
+
 Copy-Item -Recurse -Force -Path "$ModulesBuild/*" -Destination "$OutputFolder"
-Copy-Item -Recurse -Force -Path "$LauncherBuild/*" -Destination "$OutputFolder"
+Get-ChildItem "$OutputFolder"
 
 $ZipName = "SPT-$SPTVersion-$SPTCompatVersion-$(Get-Date -Format "yyyyMMdd")"
-Get-ChildItem "$OutputFolder"
+Write-Output $ZipName
 if (!$NoZip) {
     # make the final zip
     $ZipName = "$ZipName.zip"
