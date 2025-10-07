@@ -40,7 +40,7 @@ jobs:
           ]
         arch: ["x64", "arm64"]
         dbg: ["-Release"]
-        sf: ["-SingleFile"]
+        sf: [""]
     
     runs-on: "ubuntu-latest"
     
