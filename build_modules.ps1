@@ -14,6 +14,9 @@ Param(
     [Parameter(Mandatory=$true)]
     [string] $TarkovVersion,
 
+    [Parameter(Mandatory=$true)]
+    [string] $SPTVersion,
+
     [Parameter(Mandatory = $false)]
     [Switch] $NoZip
 )
@@ -74,7 +77,7 @@ Get-ChildItem "./project/Shared/Managed"
 Write-Output "build"
 Set-Location ./project
 dotnet restore
-dotnet build SPT.Build
+dotnet build SPT.Build -p:Version=$SPTVersion
 
 if ($LASTEXITCODE -ne 0) {
     throw ("dotnet build failed, exit code $LASTEXITCODE")
@@ -87,9 +90,10 @@ else {
     $CInfo = "$Branch-$Head-$CTimeS"
 }
 
-$ZipName = "SPT-Modules-$CInfo-Tarkov$TarkovVersion"
-
+$ZipName = "SPT-Modules-v$SPTVersion-$CInfo-Tarkov$TarkovVersion"
 Get-ChildItem ./Build
+
+Write-Output $ZipName
 if (!$NoZip) {
     $ZipName = "$ZipName.zip"
     Compress-Archive -Path ./Build/* -DestinationPath "../$ZipName" -Force

@@ -67,7 +67,7 @@ jobs:
       - name: Build SPT Modules
         id: build_modules
         shell: pwsh
-        run: ./build_modules.ps1 -Overwrite -NoZip -Branch ${{ matrix.versions.mbranch }} -Url ${{ secrets.DLL_URL }} -TarkovVersion ${{ matrix.versions.version }}
+        run: ./build_modules.ps1 -Overwrite -NoZip -Branch ${{ matrix.versions.mbranch }} -Url ${{ secrets.DLL_URL }} -TarkovVersion ${{ matrix.versions.version }} -SPTVersion ${{ steps.build_csharp_server.outputs.SPT_VERSION }}
 
       - name: Build SPT Launcher
         id: build_launcher
@@ -77,7 +77,7 @@ jobs:
       - name: Make Final Package
         id: build_package
         shell: pwsh
-        run: .\build_full_package.ps1 -Overwrite ${{matrix.versions.v4Flag}} -PkgOnly -NoZip
+        run: .\build_full_package.ps1 -Overwrite ${{ matrix.versions.v4Flag }} -PkgOnly -NoZip
 
       - uses: actions/upload-artifact@v4
         if: ${{!matrix.versions.v4}}
