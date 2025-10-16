@@ -99,5 +99,6 @@ The zip should have all the dlls from `EscapeFromTarkov_Data/Managed` in the **r
 | `-Commit`        | no        | The exact commit to build, doesn't matter which branch it is  |
 | `-TarkovVersion` | **yes**   | Version of the Tarkov game it is building for                 |
 | `-Url`           | **yes**   | Tarkov managed dll zip base url                               |
+| `-SPTVersion`    | **yes**   | Version of this build, should be the same as the server       |
 | `-Overwrite`     | no        | If present, will delete existing source folder without asking |
 | `-NoZip`         | no        | If present, will not compress the output to an archive        |
