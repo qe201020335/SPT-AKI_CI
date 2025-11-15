@@ -52,7 +52,7 @@ jobs:
       
       - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: ${{!matrix.versions.dotnet}}
+          dotnet-version: ${{matrix.versions.dotnet}}
 
       - name: Build SPT Node Server
         id: build_node_server
