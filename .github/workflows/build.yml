@@ -25,6 +25,7 @@ jobs:
               lbranch: "4.0.0-DEV",
               mbranch: "4.0.x-dev",
               version: "0.16.9.0.40087",
+              dotnet: 9,
               v4: true,
               v4Flag: "-IsV4"
             },
@@ -33,6 +34,7 @@ jobs:
               lbranch: "4.1.x-dev",
               mbranch: "4.1.x-dev",
               version: "0.16.9.0.40087",
+              dotnet: 10,
               v4: true,
               v4Flag: "-IsV4"
             }
@@ -50,7 +52,7 @@ jobs:
       
       - uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 9
+          dotnet-version: ${{!matrix.versions.dotnet}}
 
       - name: Build SPT Node Server
         id: build_node_server
