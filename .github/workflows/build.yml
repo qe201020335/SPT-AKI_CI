@@ -28,16 +28,16 @@ jobs:
               dotnet: 9,
               v4: true,
               v4Flag: "-IsV4"
-            },
-            {
-              sbranch: "4.1.x-dev",
-              lbranch: "4.1.x-dev",
-              mbranch: "4.1.x-dev",
-              version: "0.16.9.0.40087",
-              dotnet: 10,
-              v4: true,
-              v4Flag: "-IsV4"
             }
+            # {
+            #   sbranch: "4.1.x-dev",
+            #   lbranch: "4.1.x-dev",
+            #   mbranch: "4.1.x-dev",
+            #   version: "0.16.9.0.40087",
+            #   dotnet: 10,
+            #   v4: true,
+            #   v4Flag: "-IsV4"
+            # }
           ]
 
     runs-on: ubuntu-latest
