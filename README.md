@@ -15,7 +15,56 @@ See [Actions](https://github.com/qe201020335/SPT-AKI_CI/actions).
 >
 > Use them at your own risk! Open an issue [here](https://github.com/qe201020335/SPT-AKI_CI/issues) if you have any problems with the scripts or builds.
 
-## Build SPT Node Server
+
+## Build SPT .NET Server
+
+`build_server_csharp.ps1` is used to build the SPT .NET server.
+
+### Requirements
+
+* PowerShell
+* .NET 9 SDK (4.0.x) or .NET 10 SDK (4.1.x)
+* Git
+* Git lfs
+
+### Parameters
+
+| Parameter        | Required? | Description                                                                                                                                  |
+|------------------|-----------|----------------------------------------------------------------------------------------------------------------------------------------------|
+| `-Branch`        | no        | The branch or tag to build on                                                                                                                |
+| `-Commit`        | no        | The exact commit to build, doesn't matter which branch it is                                                                                 |
+| `-Runtime`       | no        | The target runtime to build for, such as `win-x64`, `linux-arm64`. See [.NET RID](https://learn.microsoft.com/en-us/dotnet/core/rid-catalog) |
+| `-Overwrite`     | no        | If present, will delete existing source folder without asking                                                                                |
+| `-Release`       | no        | If present, will make a release build instead of debug                                                                                       |
+| `-NoZip`         | no        | If present, will not compress the output to an archive                                                                                       |
+
+## Build SPT Modules
+
+`build_modules.ps1` is used to build the SPT client modules.
+
+The script will download the necessary Tarkov managed dlls for building. It will use the url: `$Url$TarkovVersion.zip`.
+The zip should have all the dlls from `EscapeFromTarkov_Data/Managed` in the **root** of the archive.
+
+### Requirements
+
+* PowerShell
+* .NET SDK
+* Git
+
+### Parameters
+
+| Parameter        | Required? | Description                                                   |
+|------------------|-----------|---------------------------------------------------------------|
+| `-Branch`        | no        | The branch or tag to build on                                 |
+| `-Commit`        | no        | The exact commit to build, doesn't matter which branch it is  |
+| `-TarkovVersion` | **yes**   | Version of the Tarkov game it is building for                 |
+| `-Url`           | **yes**   | Tarkov managed dll zip base url                               |
+| `-SPTVersion`    | **yes**   | Version of this build, should be the same as the server       |
+| `-Overwrite`     | no        | If present, will delete existing source folder without asking |
+| `-NoZip`         | no        | If present, will not compress the output to an archive        |
+
+
+## Build SPT Node Server (Old)
 
 `build_server.ps1` is used to build the SPT Node server.
 
@@ -55,50 +104,3 @@ Make a release build on a tag. Find out tag names on SPT's source repo. [Tags](h
 ```pwsh
 pwsh ./build_server.ps1 -Release -Branch 3.7.5
 ```
-
-## Build SPT .NET Server
-
-`build_server_csharp.ps1` is used to build the SPT .NET server.
-
-### Requirements
-
-* PowerShell
-* .NET 9 SDK
-* Git
-* Git lfs
-
-### Parameters
-
-| Parameter        | Required? | Description                                                                                                                                  |
-|------------------|-----------|----------------------------------------------------------------------------------------------------------------------------------------------|
-| `-Branch`        | no        | The branch or tag to build on                                                                                                                |
-| `-Commit`        | no        | The exact commit to build, doesn't matter which branch it is                                                                                 |
-| `-Runtime`       | no        | The target runtime to build for, such as `win-x64`, `linux-arm64`. See [.NET RID](https://learn.microsoft.com/en-us/dotnet/core/rid-catalog) |
-| `-Overwrite`     | no        | If present, will delete existing source folder without asking                                                                                |
-| `-Release`       | no        | If present, will make a release build instead of debug                                                                                       |
-| `-NoZip`         | no        | If present, will not compress the output to an archive                                                                                       |
-
-## Build SPT Modules
-
-`build_modules.ps1` is used to build the SPT client modules.
-
-The script will download the necessary Tarkov managed dlls for building. It will use the url: `$Url$TarkovVersion.zip`.
-The zip should have all the dlls from `EscapeFromTarkov_Data/Managed` in the **root** of the archive.
-
-### Requirements
-
-* PowerShell
-* .NET SDK
-* Git
-
-### Parameters
-
-| Parameter        | Required? | Description                                                   |
-|------------------|-----------|---------------------------------------------------------------|
-| `-Branch`        | no        | The branch or tag to build on                                 |
-| `-Commit`        | no        | The exact commit to build, doesn't matter which branch it is  |
-| `-TarkovVersion` | **yes**   | Version of the Tarkov game it is building for                 |
-| `-Url`           | **yes**   | Tarkov managed dll zip base url                               |
-| `-SPTVersion`    | **yes**   | Version of this build, should be the same as the server       |
-| `-Overwrite`     | no        | If present, will delete existing source folder without asking |
-| `-NoZip`         | no        | If present, will not compress the output to an archive        |
