@@ -35,7 +35,7 @@ jobs:
               version: "0.16.9.0.40087",
               v4: true,
               v4Flag: "-IsV4"
-            
+            }
           ]
 
     runs-on: ubuntu-latest
