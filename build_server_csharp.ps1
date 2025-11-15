@@ -114,7 +114,9 @@ if ($LASTEXITCODE -ne 0) {
     throw ("dotnet publish failed, exit code $LASTEXITCODE")
 }
 
-Move-Item ./Build/wwwroot ./Build/SPT_Data/
+if (Test-Path -Path ./Build/wwwroot) {
+    Move-Item ./Build/wwwroot ./Build/SPT_Data/
+}
 Get-ChildItem ./Build
 
 if ($BuildOnCommit) {
