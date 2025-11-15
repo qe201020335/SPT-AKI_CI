@@ -38,7 +38,7 @@ jobs:
               zip: true
             }
           ]
-        arch: ["x64", "arm64"]
+        arch: ["x64"]
         dbg: ["-Release"]
         sf: [""]
     
