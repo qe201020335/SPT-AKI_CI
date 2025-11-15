@@ -22,7 +22,11 @@ jobs:
           [
             {
               branch: "develop",
-              dotnet: 9
+              dotnet: 9           
+            },
+            {
+              branch: "4.1.x-dev",
+              dotnet: 10
             }
           ]
         r: 
