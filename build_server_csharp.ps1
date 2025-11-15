@@ -106,9 +106,9 @@ else {
 $BuildTime = Get-Date -Format yyyyMMdd
 
 # There is a bug with the assets csproj build target causing the checks.dat not being copied on the first build
-dotnet build --property WarningLevel=0 ./Libraries/SPTarkov.Server.Assets/SPTarkov.Server.Assets.csproj -f net9.0 -c $Configuration
-Write-Output "dotnet publish --property WarningLevel=0 ./SPTarkov.Server/SPTarkov.Server.csproj -f net9.0 -o ./Build -c $Configuration -r $Runtime --self-contained false -p $SFFlag -p:IncludeNativeLibrariesForSelfExtract=true -p:SptBuildType=$SptBuildType -p:SptVersion=$SPTVersion -p:SptBuildTime=$BuildTime -p:SptCommit=$Head -p:IsPublish=true"
-dotnet publish --property WarningLevel=0 ./SPTarkov.Server/SPTarkov.Server.csproj -f net9.0 -o ./Build -c $Configuration -r $Runtime --self-contained false -p $SFFlag -p:IncludeNativeLibrariesForSelfExtract=true -p:SptBuildType=$SptBuildType -p:SptVersion=$SPTVersion -p:SptBuildTime=$BuildTime -p:SptCommit=$Head -p:IsPublish=true
+# dotnet build --property WarningLevel=0 ./Libraries/SPTarkov.Server.Assets/SPTarkov.Server.Assets.csproj -f net9.0 -c $Configuration
+Write-Output "dotnet publish --property WarningLevel=0 ./SPTarkov.Server/SPTarkov.Server.csproj -o ./Build -c $Configuration -r $Runtime --self-contained false -p $SFFlag -p:IncludeNativeLibrariesForSelfExtract=true -p:SptBuildType=$SptBuildType -p:SptVersion=$SPTVersion -p:SptBuildTime=$BuildTime -p:SptCommit=$Head -p:IsPublish=true"
+dotnet publish --property WarningLevel=0 ./SPTarkov.Server/SPTarkov.Server.csproj -o ./Build -c $Configuration -r $Runtime --self-contained false -p $SFFlag -p:IncludeNativeLibrariesForSelfExtract=true -p:SptBuildType=$SptBuildType -p:SptVersion=$SPTVersion -p:SptBuildTime=$BuildTime -p:SptCommit=$Head -p:IsPublish=true
 
 if ($LASTEXITCODE -ne 0) {
     throw ("dotnet publish failed, exit code $LASTEXITCODE")
