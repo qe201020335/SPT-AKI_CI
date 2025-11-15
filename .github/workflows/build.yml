@@ -27,15 +27,15 @@ jobs:
               version: "0.16.9.0.40087",
               v4: true,
               v4Flag: "-IsV4"
-            }
-            # {
-            #   sbranch: "3.11.x-dev",
-            #   lbranch: "3.11.x-dev",
-            #   mbranch: "3.11.x-dev",
-            #   version: "0.16.1.3.35392",
-            #   v4: false,
-            #   v4Flag: ""
-            # }
+            },
+            {
+              sbranch: "4.1.x-dev",
+              lbranch: "4.1.x-dev",
+              mbranch: "4.1.x-dev",
+              version: "0.16.9.0.40087",
+              v4: true,
+              v4Flag: "-IsV4"
+            
           ]
 
     runs-on: ubuntu-latest
