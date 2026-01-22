@@ -55,11 +55,44 @@ Write-Output "Current HEAD is at $Head in $Branch committed at $CTimeS"
 
 Write-Output "build"
 Set-Location ./project
-dotnet restore
-dotnet build SPT.Build
+if (Test-Path -Path "./SPTarkov.Launcher")
+{
+    # new launcher 
+    # using the logic here instead of their build script becuase theirs is broken atm
+    dotnet build "./SPTarkov.Core/SPTarkov.Core.csproj" -c Release -p:OutputType=Library
+    if ($LASTEXITCODE -ne 0) {
+        throw ("dotnet build SPTarkov.Core failed, exit code $LASTEXITCODE")
+    }
+    Copy-Item "./SPTarkov.Core/bin/Release/net10.0/MudBlazor.min.css" "./SPTarkov.Launcher/wwwroot/MudBlazor.min.css"
+    Copy-Item "./SPTarkov.Core/bin/Release/net10.0/MudBlazor.min.js" "./SPTarkov.Launcher/wwwroot/MudBlazor.min.js"
+    
+    if ($IsWindows)
+    {
+        $Runtime = "win-x64"
+    } 
+    elseif ($IsLinux) {
+        $Runtime = "linux-x64"
+    }
+    else {
+        throw "Unsupported OS for launcher build"
+    }
+    
+    dotnet publish "./SPTarkov.Launcher/SPTarkov.Launcher.csproj" -c Release --self-contained false --runtime $Runtime -p:PublishSingleFile=true
+    if ($LASTEXITCODE -ne 0) {
+        throw ("dotnet build SPTarkov.Launcher failed, exit code $LASTEXITCODE")
+    }
+    if (Test-Path -Path "./Build") { Remove-Item "./Build" -Recurse -Force }
+    New-Item -Path "./" -Name "Build" -ItemType "Directory"
+    Copy-Item "./SPTarkov.Launcher/bin/Release/net10.0/win-x64/publish/SPTarkov.Launcher.exe" "./Build/SPTarkov.Launcher.exe"
+    Copy-Item "./SPTarkov.Core/SPT_Data" "./Build/SPT_Data" -Recurse
+}
+else {
+    dotnet restore
+    dotnet build SPT.Build
 
-if ($LASTEXITCODE -ne 0) {
-    throw ("dotnet build failed, exit code $LASTEXITCODE")
+    if ($LASTEXITCODE -ne 0) {
+        throw ("dotnet build failed, exit code $LASTEXITCODE")
+    }
 }
 
 Get-ChildItem ./Build
