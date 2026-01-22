@@ -24,7 +24,10 @@ Param(
     [string] $TarkovVersion,
 
     [Parameter(Mandatory=$false)]
-    [string] $Url
+    [string] $Url,
+    
+    [Parameter(Mandatory = $false)]
+    [string] $Runtime
 )
 
 $ErrorActionPreference = "Stop"
@@ -33,6 +36,20 @@ $NeedBuild = !$PkgOnly
 
 if ($NeedBuild -and ($Url.Length -eq 0 -or $TarkovVersion.Length -eq 0)) {
     throw "Not PkgOnly, missing Url and/or TarkovVersion"
+}
+
+
+if ($Runtime.Length -eq 0) {
+    if ($IsWindows)
+    {
+        $Runtime = "win-x64"
+    } 
+    elseif ($IsLinux) {
+        $Runtime = "linux-x64"
+    }
+    else {
+        throw "Unsupported OS for package build"
+    }
 }
 
 if ($Overwrite) {
@@ -75,7 +92,7 @@ if ($NeedBuild) {
     }
     else {
         Write-Output "Building SPT .NET Server"
-        pwsh ./build_server_csharp.ps1 $OverwriteFlag -Branch $ServerBranch -Runtime win-x64 -NoZip -Release
+        pwsh ./build_server_csharp.ps1 $OverwriteFlag -Branch $ServerBranch -Runtime $Runtime -NoZip -Release
         if ($LASTEXITCODE -ne 0) {
             Exit $LASTEXITCODE
         }
@@ -113,7 +130,7 @@ if ($NeedBuild) {
 
     # build launcher
     Write-Output "Building SPT Launcher"
-    pwsh ./build_launcher.ps1 $OverwriteFlag -Branch $LauncherBranch
+    pwsh ./build_launcher.ps1 $OverwriteFlag -Branch $LauncherBranch -Runtime $Runtime
     if ($LASTEXITCODE -ne 0) {
         Exit $LASTEXITCODE
     }
@@ -151,13 +168,20 @@ else {
 Copy-Item -Recurse -Force -Path "$ModulesBuild/*" -Destination "$OutputFolder"
 Get-ChildItem "$OutputFolder"
 
-$ZipName = "SPT-$SPTVersion-$SPTCompatVersion-$(Get-Date -Format "yyyyMMdd")"
+$ZipName = "SPT-$SPTVersion-$SPTCompatVersion-$(Get-Date -Format "yyyyMMdd")-$Runtime"
 Write-Output $ZipName
 if (!$NoZip) {
     # make the final zip
-    $ZipName = "$ZipName.zip"
     Write-Output "Zipping files"
-    Compress-Archive -Path "$OutputFolder/*" -DestinationPath "./$ZipName" -Force
+    if ($Runtime.StartsWith("win")) {
+        $ZipName = "$ZipName.zip"
+        Compress-Archive -Path "$OutputFolder/*" -DestinationPath "./$ZipName" -Force
+    }
+    else {
+        $ZipName = "$ZipName.tar.gz"
+        Set-Location "$OutputFolder"
+        tar -czv -f "../$ZipName" ./*
+    }
     Write-Output "Packaged file: $ZipName"
 }
 

@@ -3,7 +3,10 @@ Param(
     [Switch] $Overwrite,
 
     [Parameter(Mandatory=$false)]
-    [string] $Branch
+    [string] $Branch,
+    
+    [Parameter(Mandatory = $false)]
+    [string] $Runtime
 )
 
 $ErrorActionPreference = "Stop"
@@ -11,6 +14,19 @@ $SOURCE_DIR = "./Launcher"
 $SOURCE_REPO = "https://github.com/sp-tarkov/launcher.git"
 
 $BuildOnCommit = $Commit.Length -gt 0
+
+if ($Runtime.Length -eq 0) {
+    if ($IsWindows)
+    {
+        $Runtime = "win-x64"
+    } 
+    elseif ($IsLinux) {
+        $Runtime = "linux-x64"
+    }
+    else {
+        throw "Unsupported OS for launcher build"
+    }
+}
 
 if (Test-Path -Path $SOURCE_DIR) {
     if ($Overwrite -or (Read-Host "$SOURCE_DIR exists, delete? [y/n]") -eq 'y') {
@@ -65,25 +81,17 @@ if (Test-Path -Path "./SPTarkov.Launcher")
     }
     Copy-Item "./SPTarkov.Core/bin/Release/net10.0/MudBlazor.min.css" "./SPTarkov.Launcher/wwwroot/MudBlazor.min.css"
     Copy-Item "./SPTarkov.Core/bin/Release/net10.0/MudBlazor.min.js" "./SPTarkov.Launcher/wwwroot/MudBlazor.min.js"
-    
-    if ($IsWindows)
-    {
-        $Runtime = "win-x64"
-    } 
-    elseif ($IsLinux) {
-        $Runtime = "linux-x64"
-    }
-    else {
-        throw "Unsupported OS for launcher build"
-    }
-    
+
     dotnet publish "./SPTarkov.Launcher/SPTarkov.Launcher.csproj" -c Release --self-contained false --runtime $Runtime -p:PublishSingleFile=true
     if ($LASTEXITCODE -ne 0) {
         throw ("dotnet build SPTarkov.Launcher failed, exit code $LASTEXITCODE")
     }
-    if (Test-Path -Path "./Build") { Remove-Item "./Build" -Recurse -Force }
+
+    if (Test-Path -Path "./Build") { 
+        Remove-Item "./Build" -Recurse -Force 
+    }
     New-Item -Path "./" -Name "Build" -ItemType "Directory"
-    Copy-Item "./SPTarkov.Launcher/bin/Release/net10.0/win-x64/publish/SPTarkov.Launcher.exe" "./Build/SPTarkov.Launcher.exe"
+    Copy-Item "./SPTarkov.Launcher/bin/Release/net10.0/$Runtime/publish/SPTarkov.Launcher*" "./Build/"
     Copy-Item "./SPTarkov.Core/SPT_Data" "./Build/SPT_Data" -Recurse
 }
 else {

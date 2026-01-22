@@ -18,6 +18,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        runtime: ["win-x64", "linux-x64"]
         versions:
           [
             {
@@ -64,7 +65,7 @@ jobs:
         id: build_csharp_server
         if: ${{matrix.versions.v4}}
         shell: pwsh
-        run: ./build_server_csharp.ps1 -Overwrite -NoZip -Branch ${{ matrix.versions.sbranch }} -Runtime win-x64 -Release
+        run: ./build_server_csharp.ps1 -Overwrite -NoZip -Branch ${{ matrix.versions.sbranch }} -Runtime ${{ matrix.runtime }} -Release
 
       - name: Build SPT Modules
         id: build_modules
@@ -74,12 +75,12 @@ jobs:
       - name: Build SPT Launcher
         id: build_launcher
         shell: pwsh
-        run: ./build_launcher.ps1 -Overwrite -Branch ${{ matrix.versions.lbranch }}
+        run: ./build_launcher.ps1 -Overwrite -Branch ${{ matrix.versions.lbranch }} -Runtime ${{ matrix.runtime }}
 
       - name: Make Final Package
         id: build_package
         shell: pwsh
-        run: .\build_full_package.ps1 -Overwrite ${{ matrix.versions.v4Flag }} -PkgOnly -NoZip
+        run: .\build_full_package.ps1 -Overwrite ${{ matrix.versions.v4Flag }} -Runtime ${{ matrix.runtime }} -PkgOnly -NoZip
 
       - uses: actions/upload-artifact@v4
         if: ${{!matrix.versions.v4}}

@@ -6,3 +6,4 @@ PackagerFiles/
 server-csharp/
 .idea
 *.zip
+*.tar.gz
