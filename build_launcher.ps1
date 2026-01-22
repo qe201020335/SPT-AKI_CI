@@ -75,14 +75,14 @@ if (Test-Path -Path "./SPTarkov.Launcher")
 {
     # new launcher 
     # using the logic here instead of their build script becuase theirs is broken atm
-    dotnet build "./SPTarkov.Core/SPTarkov.Core.csproj" -c Release -p:OutputType=Library
+    dotnet build --property WarningLevel=0 "./SPTarkov.Core/SPTarkov.Core.csproj" -c Release -p:OutputType=Library
     if ($LASTEXITCODE -ne 0) {
         throw ("dotnet build SPTarkov.Core failed, exit code $LASTEXITCODE")
     }
     Copy-Item "./SPTarkov.Core/bin/Release/net10.0/MudBlazor.min.css" "./SPTarkov.Launcher/wwwroot/MudBlazor.min.css"
     Copy-Item "./SPTarkov.Core/bin/Release/net10.0/MudBlazor.min.js" "./SPTarkov.Launcher/wwwroot/MudBlazor.min.js"
 
-    dotnet publish "./SPTarkov.Launcher/SPTarkov.Launcher.csproj" -c Release --self-contained false --runtime $Runtime -p:PublishSingleFile=true
+    dotnet publish --property WarningLevel=0 "./SPTarkov.Launcher/SPTarkov.Launcher.csproj" -c Release --self-contained false --runtime $Runtime -p:PublishSingleFile=true
     if ($LASTEXITCODE -ne 0) {
         throw ("dotnet build SPTarkov.Launcher failed, exit code $LASTEXITCODE")
     }
@@ -96,7 +96,7 @@ if (Test-Path -Path "./SPTarkov.Launcher")
 }
 else {
     dotnet restore
-    dotnet build SPT.Build
+    dotnet build --property WarningLevel=0 SPT.Build
 
     if ($LASTEXITCODE -ne 0) {
         throw ("dotnet build failed, exit code $LASTEXITCODE")

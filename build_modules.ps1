@@ -72,12 +72,12 @@ Write-Output "Current HEAD is at $Head in $Branch committed at $CTimeS"
 Write-Output "Download tarkov dlls"
 Invoke-WebRequest -Uri "$Url$TarkovVersion.zip" -OutFile "./dlls.zip"
 Expand-Archive -Path "./dlls.zip" -DestinationPath "./project/Shared/Managed"
-Get-ChildItem "./project/Shared/Managed"
+# Get-ChildItem "./project/Shared/Managed"
 
 Write-Output "build"
 Set-Location ./project
 dotnet restore
-dotnet build SPT.Build -p:Version=$SPTVersion
+dotnet build --property WarningLevel=0 SPT.Build -p:Version=$SPTVersion
 
 if ($LASTEXITCODE -ne 0) {
     throw ("dotnet build failed, exit code $LASTEXITCODE")

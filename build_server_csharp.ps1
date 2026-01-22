@@ -71,7 +71,7 @@ git lfs fetch
 git lfs pull
 
 $SPTMeta = (Get-Content ./Libraries/SPTarkov.Server.Assets/SPT_Data/configs/core.json | ConvertFrom-Json -AsHashtable)
-Write-Output $SPTMeta
+# Write-Output $SPTMeta
 
 $SPTVersion = (Select-Xml -Path .\Build.props '//SptVersion').Node.InnerText  # $SPTmeta.sptVersion
 $EFTVersion = $SPTmeta.compatibleTarkovVersion
@@ -117,7 +117,7 @@ if ($LASTEXITCODE -ne 0) {
 if (Test-Path -Path ./Build/wwwroot) {
     Move-Item ./Build/wwwroot ./Build/SPT_Data/
 }
-Get-ChildItem ./Build
+# Get-ChildItem ./Build
 
 if ($BuildOnCommit) {
     $CInfo = "$Head-$CTimeS"

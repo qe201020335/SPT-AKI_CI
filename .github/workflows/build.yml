@@ -13,8 +13,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  job2:
-    name: Build Windows SPT Packages
+  job1:
+    name: Build SPT Packages
     strategy:
       fail-fast: false
       matrix:
