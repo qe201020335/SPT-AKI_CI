@@ -18,7 +18,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        runtime: ["win-x64", "linux-x64"]
+        r: 
+          [
+            {
+              runtime: "win-x64",
+              u: true
+          },
+            {
+              runtime: "linux-x64",
+              u: false
+            }
+          ]
         versions:
           [
             {
@@ -65,7 +75,7 @@ jobs:
         id: build_csharp_server
         if: ${{matrix.versions.v4}}
         shell: pwsh
-        run: ./build_server_csharp.ps1 -Overwrite -NoZip -Branch ${{ matrix.versions.sbranch }} -Runtime ${{ matrix.runtime }} -Release
+        run: ./build_server_csharp.ps1 -Overwrite -NoZip -Branch ${{ matrix.versions.sbranch }} -Runtime ${{ matrix.r.runtime }} -Release
 
       - name: Build SPT Modules
         id: build_modules
@@ -75,14 +85,15 @@ jobs:
       - name: Build SPT Launcher
         id: build_launcher
         shell: pwsh
-        run: ./build_launcher.ps1 -Overwrite -Branch ${{ matrix.versions.lbranch }} -Runtime ${{ matrix.runtime }}
+        run: ./build_launcher.ps1 -Overwrite -Branch ${{ matrix.versions.lbranch }} -Runtime ${{ matrix.r.runtime }}
 
       - name: Make Final Package
         id: build_package
         shell: pwsh
-        run: .\build_full_package.ps1 -Overwrite ${{ matrix.versions.v4Flag }} -Runtime ${{ matrix.runtime }} -PkgOnly -NoZip
+        run: .\build_full_package.ps1 -Overwrite ${{ matrix.versions.v4Flag }} -Runtime ${{ matrix.r.runtime }} -PkgOnly -NoZip
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload Node Server
+        uses: actions/upload-artifact@v4
         if: ${{!matrix.versions.v4}}
         with:
           name: ${{ steps.build_node_server.outputs.ZIP_NAME }}
@@ -92,7 +103,8 @@ jobs:
           retention-days: 3
           compression-level: 9
           
-      - uses: actions/upload-artifact@v4
+      - name: Upload .NET Server
+        uses: actions/upload-artifact@v4
         if: ${{matrix.versions.v4}}
         with:
           name: ${{ steps.build_csharp_server.outputs.ZIP_NAME }}
@@ -102,7 +114,9 @@ jobs:
           retention-days: 3
           compression-level: 9
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload Modules
+        uses: actions/upload-artifact@v4
+        if: ${{matrix.r.u}}
         with:
           name: ${{ steps.build_modules.outputs.ZIP_NAME }}
           path: './Modules/project/Build/*'
@@ -111,7 +125,8 @@ jobs:
           retention-days: 3
           compression-level: 9
 
-      - uses: actions/upload-artifact@v4
+      - name: Upload Full Package
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.build_package.outputs.ZIP_NAME }}
           path: "./output/*"
