@@ -22,7 +22,7 @@ jobs:
           [
             {
               sbranch: "develop",
-              lbranch: "4.0.0-DEV",
+              lbranch: "master",
               mbranch: "4.0.x-dev",
               version: "0.16.9.0.40087",
               dotnet: 9,
