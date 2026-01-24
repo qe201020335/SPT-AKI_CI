@@ -23,11 +23,11 @@ jobs:
             {
               branch: "develop",
               dotnet: 9           
+            },
+            {
+              branch: "4.1.x-dev",
+              dotnet: 10
             }
-            # {
-            #   branch: "4.1.x-dev",
-            #   dotnet: 10
-            # }
           ]
         r: 
           [
@@ -43,7 +43,7 @@ jobs:
             }
           ]
         arch: ["x64"]
-        dbg: ["-Release"]
+        dbg: ["", "-Release"]
         sf: [""]
     
     runs-on: "ubuntu-latest"
