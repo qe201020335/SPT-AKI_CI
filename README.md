@@ -1,5 +1,9 @@
 # SPT-AKI_CI <a href="https://github.com/qe201020335/SPT-AKI_CI/actions"><img src="https://img.shields.io/github/actions/workflow/status/qe201020335/SPT-AKI_CI/build.yml?branch=master&style=for-the-badge" alt="GitHub Actions status" align="right"></a>
 
+> [!NOTE]
+> Daily builds for 4.1.x is partially broken at the moment because the `hollowed.dll` provided in the SPT repo is not up to date
+>
+
 Scripts for
 building [SPT Server](https://github.com/sp-tarkov/server), [SPT .NET Server](https://github.com/sp-tarkov/server-csharp), [SPT Launcher](https://github.com/sp-tarkov/launcher), [SPT Modules](https://github.com/sp-tarkov/modules)
 and also making an entire release package.
